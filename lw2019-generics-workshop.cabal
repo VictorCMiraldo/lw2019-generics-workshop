@@ -1,0 +1,36 @@
+cabal-version: 1.12
+
+-- This file has been generated from package.yaml by hpack version 0.31.2.
+--
+-- see: https://github.com/sol/hpack
+--
+-- hash: 50600b087fb2d33db086123d991b53526f3ac5656affb99e999c3d7130aa007a
+
+name:           lw2019-generics-workshop
+version:        0.0.0
+synopsis:       Exercises for the workshop on generic programming at Lambda World
+description:    See README at <https://github.com/VictorCMiraldo/lw2019-generics-workshop#README.md>
+category:       Other
+homepage:       https://github.com/VictorCMiraldo/lw2019-generics-workshop#readme
+bug-reports:    https://github.com/VictorCMiraldo/lw2019-generics-workshop/issues
+maintainer:     Victor Miraldo <v.cacciarimiraldo@gmail.com>
+build-type:     Simple
+
+source-repository head
+  type: git
+  location: https://github.com/VictorCMiraldo/lw2019-generics-workshop
+
+library
+  exposed-modules:
+      GenericsGHC.Equality
+      GenericsMRSOP.Equality
+      GenericsSOP.Equality
+  other-modules:
+      Paths_lw2019_generics_workshop
+  hs-source-dirs:
+      src/
+  build-depends:
+      base >=4.9 && <5
+    , generics-mrsop >=2.0.0
+    , generics-sop
+  default-language: Haskell2010

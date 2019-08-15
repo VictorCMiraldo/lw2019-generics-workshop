@@ -1,0 +1,15 @@
+name: lw2019-generics-workshop
+version: 0.0.0
+synopsis: Exercises for the workshop on generic programming at Lambda World
+description: See README at <https://github.com/VictorCMiraldo/lw2019-generics-workshop#README.md>
+maintainer: Victor Miraldo <v.cacciarimiraldo@gmail.com>
+github: VictorCMiraldo/lw2019-generics-workshop
+category: Other
+
+dependencies:
+  - base >= 4.9 && < 5
+  - generics-sop  
+  - generics-mrsop >= 2.0.0
+
+library:
+  source-dirs: src/
