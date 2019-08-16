@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 50600b087fb2d33db086123d991b53526f3ac5656affb99e999c3d7130aa007a
+-- hash: 844a8d2192a93acf539f8815e0f6938899ed1b4642f6a0e75d4cefa2c7b6cee1
 
 name:           lw2019-generics-workshop
 version:        0.0.0
@@ -22,9 +22,10 @@ source-repository head
 
 library
   exposed-modules:
-      GenericsGHC.Equality
-      GenericsMRSOP.Equality
-      GenericsSOP.Equality
+      LW2019.GenericsGHC.Equality
+      LW2019.GenericsMRSOP.Equality
+      LW2019.GenericsSOP.Equality
+      LW2019.Types.Regular
   other-modules:
       Paths_lw2019_generics_workshop
   hs-source-dirs:
