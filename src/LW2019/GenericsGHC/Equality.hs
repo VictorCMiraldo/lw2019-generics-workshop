@@ -28,19 +28,8 @@ class Eq' a where
      => a -> a -> Bool
   eq x y = geq (from x) (from y)
 
--- Now we declare some instances for our base types
-instance Eq' String where
-  eq = (==)
-
-instance Eq' Float where
-  eq = (==)
-
--- And we are ready to use the generic machinery
--- for BookInfo
-instance Eq' BookInfo where
-  
-
-
+-- |The generic equality is actually defined by induction
+-- on the /structure/ of the representation.
 class GEq' (f :: * -> *) where
   geq :: f x -> f y -> Bool
 
@@ -60,3 +49,19 @@ instance (GEq' f) => GEq' (M1 i s f) where
 
 instance (Eq' a) => GEq' (K1 R a) where
   geq (K1 x) (K1 y) = eq x y
+
+-- Now we declare some instances for our base types
+instance Eq' String where
+  eq = (==)
+
+instance Eq' Float where
+  eq = (==)
+
+-- And we are ready to use the generic machinery
+-- for our regular types!
+instance Eq' BookInfo where
+instance Eq' QualName where
+
+-- Note how type parameters are a non-issue as long
+-- as we require a comprassion instance for them.
+instance Eq' a => Eq' (Tree12 a) where
