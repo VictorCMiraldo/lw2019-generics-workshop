@@ -17,10 +17,56 @@ monofontoptions: Scale=0.8
 
 ## Motivation
 
+Bob maintains networking code, Alice decides to add
+another field to some datatype used indirectly.\pause
+
+* No generics involved:
+  + Compile-time failures if we have types\pause
+
+* Generics involved:
+  + Nothing happens, generic infrastructure handles this 
+    automatically.
+
+## Well Known Generic Problems
+
+\pause
+
+* Equality\pause
+
+* Serialization\pause
+
+* Pretty-Printing\pause
+
+* Subterm Indexing\pause
+
+* Merkle Trees\pause
+
+* Differencing\pause
+
+* etc
+
+## Today
+
+* Clone the repository
+
+* Profit
+
+# Building Datatypes 101
+
+## The Set of Non-recursive Datatypes
+
+## The Set of Regular Datatypes
+
+## The Set of Mutually Recursive Datatypes
+
 ## General Regular Datatypes
 
 * Akin to regular languages
 * Simple recursion at most
+* Break simplistic pattern with
+  shape-equality. The Lack of knowledge about what
+  is recursive data or not will make this very hard to write in
+  GHC.Generics or Generics.SOP
 
 ## Generic Equality
 

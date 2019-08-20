@@ -5,7 +5,7 @@
 {-# LANGUAGE TemplateHaskell       #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE GADTs                 #-}
-module LW2019.GenericsMRSOP.Repr where
+module LW2019.Generics.MRSOP.Repr where
 
 import LW2019.Types.Regular
 import Generics.MRSOP.Base

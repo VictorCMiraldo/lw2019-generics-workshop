@@ -1,6 +1,6 @@
-module LW2019.GenericsMRSOP.Equality where
+module LW2019.Generics.MRSOP.Equality where
 
-import LW2019.GenericsMRSOP.Repr
+import LW2019.Generics.MRSOP.Repr
 
 import Generics.MRSOP.Base
 

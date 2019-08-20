@@ -3,7 +3,7 @@
 {-# LANGUAGE TypeFamilies       #-}
 {-# LANGUAGE DataKinds          #-}
 {-# LANGUAGE TemplateHaskell    #-}
-module LW2019.GenericsSOP.Repr where
+module LW2019.Generics.SOP.Repr where
 
 -- The types we want to look at are:
 import LW2019.Types.Regular

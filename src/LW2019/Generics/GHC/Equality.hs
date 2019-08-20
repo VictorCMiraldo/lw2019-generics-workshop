@@ -6,11 +6,11 @@
 {-# LANGUAGE FlexibleContexts   #-}
 {-# LANGUAGE DefaultSignatures  #-}
 {-# LANGUAGE KindSignatures     #-}
-module LW2019.GenericsGHC.Equality where
+module LW2019.Generics.GHC.Equality where
 
 -- The types we want to look at are:
 import LW2019.Types.Regular
-import LW2019.GenericsGHC.Repr
+import LW2019.Generics.GHC.Repr
 
 -- Our generic library of study here will be:
 import GHC.Generics

@@ -2,11 +2,13 @@
 {-# LANGUAGE RankNTypes       #-}
 {-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE GADTs            #-}
-module LW2019.GenericsSOP.Equality where
+module LW2019.Generics.SOP.Equality where
 
 import LW2019.Types.Regular
-import LW2019.GenericsSOP.Repr
+import LW2019.Generics.SOP.Repr
 import Generics.SOP
+
+-- Recall the definition of NS and NP.
 
 geq :: (Generic a , All2 Eq (Code a))
     => a -> a -> Bool
