@@ -1,4 +1,0 @@
-module GenericsGHC.Equality where
-
-import GHC.Generics
-
