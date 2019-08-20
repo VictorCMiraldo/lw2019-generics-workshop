@@ -17,6 +17,21 @@ monofontoptions: Scale=0.8
 
 ## Motivation
 
+## General Regular Datatypes
+
+* Akin to regular languages
+* Simple recursion at most
+
+## Generic Equality
+
+## Generic Serialization
+
+## Sums of Products of Regular Datatypes
+
+* Equality revisite
+* Serialization revisited
+
+
 ## Datatypes Building Blocks
 
 ## Normal Forms for Building Blocks
