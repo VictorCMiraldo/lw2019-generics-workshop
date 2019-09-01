@@ -26,4 +26,5 @@ geq x y = go (from x) (from y)
     eq :: forall (a :: *). Eq a => I a -> I a -> K Bool a
     eq (I a) (I b) = K (a == b)
 
-
+instance Eq QualName where
+  x == y = geq x y
