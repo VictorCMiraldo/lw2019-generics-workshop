@@ -10,6 +10,9 @@ dependencies:
   - base >= 4.9 && < 5
   - generics-sop  
   - generics-mrsop >= 2.0.0
+  - cryptonite
+  - memory
+  - bytestring
 
 library:
   source-dirs: src/
