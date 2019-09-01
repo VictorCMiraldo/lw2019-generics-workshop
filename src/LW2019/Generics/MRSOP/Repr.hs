@@ -1,3 +1,4 @@
+{-# LANGUAGE KindSignatures        #-}
 {-# LANGUAGE FlexibleInstances     #-}
 {-# LANGUAGE TypeSynonymInstances  #-}
 {-# LANGUAGE PatternSynonyms       #-}
@@ -8,6 +9,7 @@
 module LW2019.Generics.MRSOP.Repr where
 
 import LW2019.Types.Regular
+import LW2019.Types.MutuallyRecursive
 import Generics.MRSOP.Base
 import Generics.MRSOP.Opaque
 import Generics.MRSOP.TH
@@ -31,3 +33,21 @@ instance Family Singl FamQualName_ CodesQualName_ where
 
 -- We don't support parameters though;
 deriveFamily [t| Tree12 Int |]
+
+-- But we support fancier types just like that!
+deriveFamily [t| Rose Int |]
+
+-- Or, say we actually want to have a particular selection
+-- of opaque types, we can do so in a few easy steps:
+
+-- 1) Enumerate the types we want available
+data MyOpq = MyString
+
+-- 2) Create an interpretation back into Hask
+data MyOpqI :: MyOpq -> * where
+  Opq_String :: String -> MyOpqI MyString
+
+-- 3) Call 'deriveDamilyWith' passing the interpretation
+-- of our selection of opaque types.
+deriveFamilyWith ''MyOpqI [t| LambdaLet String |]
+  
