@@ -47,13 +47,32 @@ another field to some datatype used indirectly.\pause
 
 ## Today
 
-* Clone the repository
+* Three Generic Programming Libraries
+    - `GHC.Generics`, \pause the builtin generics powerhorse
+    - `Generics.SOP`, \pause with expressive combinator-based programming
+    - `Generics.MRSOP`, \pause combinator-based programming with mutual recursion
 
-* Profit
+* Important: Clone the repository
+    - `https://github.com/VictorCMiraldo/lw2019-generics-workshop.git`
 
 # Building Datatypes 101
 
-## The Set of Non-recursive Datatypes
+## Datatype Building Blocks
+
+Datatypes can be constructed with sums, products and the unit type.
+
+Lets to the Prelude!
+
+```haskell
+data (f :*: g) x = f x :*: g x
+data (f :+: g) x = L1 (f x) | R1 (g x)
+data U1        x = U1
+data K1 m a    x = K1 x
+data M1 i s c  x = M1 x
+```
+
+REVIEW THESE DEFS!!!
+
 
 ## The Set of Regular Datatypes
 
