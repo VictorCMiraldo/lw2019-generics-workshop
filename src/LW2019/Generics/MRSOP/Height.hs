@@ -21,11 +21,11 @@ gheight0 x = go (dfrom x)
   where
     go :: Fix ki codes ix -> Int
     go x = case sop (unFix x) of
-               Tag _ p -> 1 + maximum (0:elimNP recHeight p)
+               Tag _ p -> maximum (0:elimNP recHeight p)
 
     recHeight :: NA ki (Fix ki codes) at -> Int
     recHeight (NA_K _) = 0
-    recHeight (NA_I x) = go x
+    recHeight (NA_I x) = 1 + go x
 
 -- Well, like most recursive functions, computing the
 -- height of a tree is a catamorphism.

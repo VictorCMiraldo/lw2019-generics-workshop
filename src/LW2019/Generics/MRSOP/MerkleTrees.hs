@@ -94,3 +94,4 @@ authAlgebra proj rep
     snat2W64 :: SNat n -> Word64
     snat2W64 SZ     = 0
     snat2W64 (SS c) = 1 + snat2W64 c
+
