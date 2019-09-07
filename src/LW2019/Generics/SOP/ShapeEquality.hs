@@ -12,35 +12,8 @@ module LW2019.Generics.SOP.ShapeEquality where
 
 import LW2019.Types.Regular
 import LW2019.Generics.SOP.Repr
+import LW2019.Generics.SOP.AnnotateRec
 import Generics.SOP
-
--- Shape equality will suffer from a downside of
--- a combinator based approach. We will have to
--- resort to typeclasses in anyway, otherwise
--- we can't distinguish which fields should be recursed over.
---
--- That being said, the typeclass monsters can be used only
--- to identify the recursive positions, once that's done,
--- we can go back to using a combinator-based approach.
-
-data Ann orig :: * -> * where
-  Rec   :: orig -> Ann orig orig
-  NoRec :: x    -> Ann orig x
-
-class AnnotateRec orig (prod :: [ * ]) where
-  annotate :: NP I prod -> NP (Ann orig) prod
-
-instance AnnotateRec orig '[] where
-  annotate Nil = Nil
-  
-instance {-# OVERLAPPABLE #-} (AnnotateRec orig xs)
-    => AnnotateRec orig (x ': xs) where
-  annotate (I x :* xs) = NoRec x :* (annotate xs)
-
-instance {-# OVERLAPPING #-} (AnnotateRec orig xs)
-    => AnnotateRec orig (orig ': xs) where
-  annotate (I x :* xs) = Rec x :* (annotate xs)
-
 
 gshapeEq :: forall a . (Generic a , All (AnnotateRec a) (Code a))
          => a -> a -> Bool

@@ -13,6 +13,9 @@ dependencies:
   - cryptonite
   - memory
   - bytestring
+  - QuickCheck
+  - HUnit
+  - generic-random
 
 library:
   source-dirs: src/

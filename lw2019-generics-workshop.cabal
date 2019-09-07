@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 1be1a23b804fe20bfcb72202ff70a501a62b7c3e4ca228107f6ae54726b183a3
+-- hash: c22b2e558781538cd6f0b8a204466ab5277c078f6891a164992efb60868bb5fe
 
 name:           lw2019-generics-workshop
 version:        0.0.0
@@ -23,16 +23,20 @@ source-repository head
 library
   exposed-modules:
       LW2019.Generics.GHC.Equality
+      LW2019.Generics.GHC.Height
       LW2019.Generics.GHC.Repr
       LW2019.Generics.GHC.ShapeEquality
       LW2019.Generics.MRSOP.Equality
       LW2019.Generics.MRSOP.MerkleTrees
       LW2019.Generics.MRSOP.Repr
       LW2019.Generics.MRSOP.ShapeEquality
+      LW2019.Generics.SOP.AnnotateRec
       LW2019.Generics.SOP.Equality
+      LW2019.Generics.SOP.Height
       LW2019.Generics.SOP.Repr
       LW2019.Generics.SOP.ShapeEquality
       LW2019.Prelude
+      LW2019.Types.Instances.Arbitrary
       LW2019.Types.MutuallyRecursive
       LW2019.Types.Regular
   other-modules:
@@ -40,9 +44,12 @@ library
   hs-source-dirs:
       src/
   build-depends:
-      base >=4.9 && <5
+      HUnit
+    , QuickCheck
+    , base >=4.9 && <5
     , bytestring
     , cryptonite
+    , generic-random
     , generics-mrsop >=2.0.0
     , generics-sop
     , memory

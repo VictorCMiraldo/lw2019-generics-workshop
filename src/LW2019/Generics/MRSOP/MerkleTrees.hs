@@ -26,29 +26,12 @@ import qualified Crypto.Hash.Algorithms as Hash (Blake2s_256)
 
 import Generics.MRSOP.Base
 import Generics.MRSOP.Util
-import Generics.MRSOP.AG (synthesize)
+import Generics.MRSOP.AG (AnnFix , synthesize)
 
 -- |Our digests come from Blake2s_256 
 newtype Digest
   = Digest { getDigest :: Hash.Digest Hash.Blake2s_256 }
   deriving (Eq , Show)
-
-{-
--- |Unpacks a digest into a list of Word64.
-toW64s :: Digest -> [Word64]
-toW64s = map combine . chunksOf 8 . BA.unpack . getDigest
-  where
-    chunksOf n l
-      | length l <= n = [l]
-      | otherwise     = let (h , t) = splitAt n l
-                         in h : chunksOf n t
-
-    -- precondition: length must be 8!!!
-    combine :: [Word8] -> Word64
-    combine = foldl' (\acu (n , next)
-                       -> shiftL (fromIntegral next) (8*n) .|. acu) 0
-            . zip [0,8,16,24,32,40,48,56]
-    
 
 -- |Auxiliar hash function with the correct types instantiated.
 hash :: BS.ByteString -> Digest
@@ -71,7 +54,7 @@ instance Digestible Word64 where
   digest = hash . BA.fromW64BE
 
 -- |A functor is digestible if we can hash its
---  value pointwise.
+--  values pointwise.
 class Digestible1 (f :: k -> *) where
   digest1 :: forall ki . f ki -> Digest
 
@@ -111,5 +94,3 @@ authAlgebra proj rep
     snat2W64 :: SNat n -> Word64
     snat2W64 SZ     = 0
     snat2W64 (SS c) = 1 + snat2W64 c
-
--}

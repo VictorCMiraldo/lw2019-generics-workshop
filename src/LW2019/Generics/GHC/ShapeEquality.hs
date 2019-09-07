@@ -24,7 +24,6 @@ import Data.Proxy
 class ShapeEq orig a where
   shapeEq :: Proxy orig -> a -> a -> Bool
   default shapeEq
-    
     :: (Generic a , GShapeEq orig (Rep a))
     => Proxy orig -> a -> a -> Bool
   shapeEq p x y = gshapeEq p (from x) (from y)
