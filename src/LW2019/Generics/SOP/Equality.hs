@@ -28,3 +28,6 @@ geq x y = go (from x) (from y)
 
 instance Eq QualName where
   x == y = geq x y
+
+instance Eq a => Eq (Tree12 a) where
+  x == y = geq x y

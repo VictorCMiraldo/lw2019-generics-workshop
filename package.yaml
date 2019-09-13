@@ -14,8 +14,17 @@ dependencies:
   - memory
   - bytestring
   - QuickCheck
-  - HUnit
+  - hspec
   - generic-random
 
 library:
   source-dirs: src/
+
+tests:
+  spec: 
+    main: Spec.hs
+    source-dirs: 
+      - tests
+    dependencies:
+      - lw2019-generics-workshop
+

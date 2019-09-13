@@ -57,6 +57,9 @@ instance Eq' String where
 instance Eq' Float where
   eq = (==)
 
+instance Eq' Int where
+  eq = (==)
+
 -- And we are ready to use the generic machinery
 -- for our regular types!
 instance Eq' BookInfo where

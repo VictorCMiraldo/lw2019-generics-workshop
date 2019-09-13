@@ -28,11 +28,13 @@ instance Generic BookInfo where
 -- But hey: generics-sop has "Generic Generic Programming",
 -- meaning that it can use GHC.Generics instances to
 -- derive generics-sop 'Generic' instances:
-deriving instance GHC.Generic QualName
-instance Generic QualName 
+--
+-- > deriving instance GHC.Generic QualName
+-- > instance Generic QualName 
+--
 -- This only works for automatically generated GHC.Generic
 -- instances.
-
+deriveGeneric ''QualName
 
 -- We can also use template haskell to derive our instances.
 -- What's the generated code? Again, we can check by

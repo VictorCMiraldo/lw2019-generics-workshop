@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: c22b2e558781538cd6f0b8a204466ab5277c078f6891a164992efb60868bb5fe
+-- hash: 9dea4e91154d9f996c9f20a72df01445fc79fa6f49b0a7abc027dd00a3b19b62
 
 name:           lw2019-generics-workshop
 version:        0.0.0
@@ -27,6 +27,7 @@ library
       LW2019.Generics.GHC.Repr
       LW2019.Generics.GHC.ShapeEquality
       LW2019.Generics.MRSOP.Equality
+      LW2019.Generics.MRSOP.Height
       LW2019.Generics.MRSOP.MerkleTrees
       LW2019.Generics.MRSOP.Repr
       LW2019.Generics.MRSOP.ShapeEquality
@@ -44,13 +45,34 @@ library
   hs-source-dirs:
       src/
   build-depends:
-      HUnit
-    , QuickCheck
+      QuickCheck
     , base >=4.9 && <5
     , bytestring
     , cryptonite
     , generic-random
     , generics-mrsop >=2.0.0
     , generics-sop
+    , hspec
+    , memory
+  default-language: Haskell2010
+
+test-suite spec
+  type: exitcode-stdio-1.0
+  main-is: Spec.hs
+  other-modules:
+      LW2019.EqualitySpec
+      Paths_lw2019_generics_workshop
+  hs-source-dirs:
+      tests
+  build-depends:
+      QuickCheck
+    , base >=4.9 && <5
+    , bytestring
+    , cryptonite
+    , generic-random
+    , generics-mrsop >=2.0.0
+    , generics-sop
+    , hspec
+    , lw2019-generics-workshop
     , memory
   default-language: Haskell2010
