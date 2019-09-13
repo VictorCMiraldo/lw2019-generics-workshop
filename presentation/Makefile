@@ -10,7 +10,7 @@ verbose:slides.md
 	  --template uu-metropolis/beamer-template.tex
 
 
-slides.pdf: slides.md
+slides.pdf: slides.md uu-metropolis/beamer-template.tex
 	pandoc -t beamer slides.md -o slides.pdf\
 	  --slide-level=2\
 	  $(LATEXENGINE)\

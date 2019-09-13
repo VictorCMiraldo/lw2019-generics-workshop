@@ -4,12 +4,15 @@ module LW2019.Prelude where
 data Bin a = Leaf | Fork a (Bin a) (Bin a)
   deriving (Eq , Show)
 
--- * One Layer at a Time
-
 -- |The art of generic programming consists
 -- in representing this type by the composition of
 -- simple combinators, that can be handled in
--- a generic fashion:
+-- a generic fashion.
+--
+-- Actually, we can represent any datatype using only
+-- Either; (,); (); and an assormtnet of opaque types
+-- such as Int, Char, etc...
+--
 type Bin' a = Either () (a , Bin a , Bin a)
 
 to :: Bin' a -> Bin a
@@ -19,14 +22,13 @@ to (Right (a, l, r)) = Fork a l r
 from :: Bin a -> Bin' a
 from = undefined
 
--- No recursion have happened, so far, though.
-
 -- * Recursion
 
 -- |Recursive datatypes are nothing but the least
 -- fixpoint of some functor. In our case, 'Bin' above
 -- can be seen as @Fix (BinF a)@,
 newtype BinF a x = BinF { unBinF :: Either () (a , x , x) }
+
 newtype Fix f    = Fix { unFix :: f (Fix f) }
 
 binToFixBinF :: Bin a -> Fix (BinF a)

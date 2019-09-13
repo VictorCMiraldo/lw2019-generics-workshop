@@ -8,12 +8,11 @@ theme: metropolis
 mainfont: Open Sans
 mainfontoptions: Scale=0.8
 sansfont: Open Sans
-sansfontoptions: Scale=0.8
+sansfontoptions: Scale=0.6
 monofont: Ubuntu Mono
-monofontoptions: Scale=0.8
+monofontoptions: Scale=0.7
+handout: true
 ---
-
-# Generic Programming
 
 ## Motivation
 
@@ -47,6 +46,8 @@ another field to some datatype used indirectly.\pause
 
 ## Today
 
+\clonetherepo
+
 * Three Generic Programming Libraries
     - `GHC.Generics`, \pause the builtin generics powerhorse
     - `Generics.SOP`, \pause with expressive combinator-based programming
@@ -55,26 +56,105 @@ another field to some datatype used indirectly.\pause
 * Important: Clone the repository
     - `https://github.com/VictorCMiraldo/lw2019-generics-workshop.git`
 
-# Building Datatypes 101
-
 ## Datatype Building Blocks
 
 Datatypes can be constructed with sums, products and the unit type.
 
-Lets to the Prelude!
+\vfill
+
+\exercise{LW2019/Prelude.hs}
+
+\vfill
+
+Note the `from` and `to` functions converting between generic
+and original representations.
+
+\pause
+
+Meet the regular datatypes we will use today:
+\emacsonly{LW2019/Types/Regular.hs}
+
+## Datatype Building Blocks: Standardizing
+
+`GHC.Generics` standard combinators:
+
+\vfill
 
 ```haskell
 data (f :*: g) x = f x :*: g x
 data (f :+: g) x = L1 (f x) | R1 (g x)
 data U1        x = U1
-data K1 m a    x = K1 x
-data M1 i s c  x = M1 x
+data K1 i c    x = K1 x
+data M1 i c f  x = M1 x
+data V1        x 
 ```
 
-REVIEW THESE DEFS!!!
+\vfill
 
+Let's write `GHC.Generic` instances.
+
+\pause
+\exercise{LW2019/Generics/GHC/Repr.hs}
 
 ## The Set of Regular Datatypes
+
+* Lists, Binary Trees, etc... Constructed using sums, products, unit and least fixpoints:
+    ```haskell
+    newtype Fix f = Fix { unFix :: f (Fix f) }
+    ```
+
+* `GHC.Generics` does not represent recursion explicitely.
+
+* Standardized combinators allow us to write functions
+  by \emph{induction on the structure of the generic representation}.
+
+\pause
+
+```haskell
+instance (Func f , Func g) => Func (f :*: g) where
+  func (fx :*: gx) = ...
+```
+
+\pause
+
+\exercise{LW2019/Generics/GHC/Equality.hs}
+
+## Sums-of-Products
+
+* Writing functions by induction on the typeclass level is pretty boring.
+
+* We know generic representation of a Haskell datatype will
+  be in SOP form.
+
+\pause
+
+```haskell
+data Bin a = Leaf a | Fork (Bin a) (Bin a)
+
+type instance Code (Bin a) = '[ '[ a ]
+                              , '[ Bin a , Bin a ] ]
+
+type Rep (Bin a) = SOP I (Code (Bin a))
+```
+
+\exercise{LW2019/Generics/SOP/Repr.hs}
+
+## Sums-of-Products: Interpreting Codes
+
+Define GADT's that perform induction on \emph{codes}
+
+```haskell
+data NS (f :: k -> *) :: [k] where
+  Z :: f x     -> NS f (x ': xs)
+  S :: NS f xs -> NS f (x ': xs)
+
+data NP (f :: K -> *) :: [k] where
+  Nil  :: NP f []
+  Cons :: f x -> NP f xs -> NP f (x ': xs)
+```
+
+Lets write the equality function for sums of products
+\exercise{LW2019/Generics/SOP/Equality.hs}        
 
 ## The Set of Mutually Recursive Datatypes
 
