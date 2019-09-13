@@ -11,9 +11,6 @@ data BookInfo
              Float  -- ^ Price
   deriving (Show)
 
-book1 = BookInfo "Book1" "123456789" 12.5
-book2 = BookInfo "Book2" "989898989" 7.25
-
 -- |Lets make a slightly more interesting datatype
 -- for our second example: Fully qualified names
 data QualName

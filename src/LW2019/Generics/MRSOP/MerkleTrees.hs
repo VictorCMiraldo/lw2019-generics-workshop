@@ -5,11 +5,6 @@
 {-# LANGUAGE ScopedTypeVariables #-}
 module LW2019.Generics.MRSOP.MerkleTrees where
 
-
-import LW2019.Generics.MRSOP.Repr
-
-import Generics.MRSOP.Base
-
 import Data.Proxy
 import Data.Functor.Const
 import Data.Word (Word8,Word64)
@@ -27,6 +22,8 @@ import qualified Crypto.Hash.Algorithms as Hash (Blake2s_256)
 import Generics.MRSOP.Base
 import Generics.MRSOP.Util
 import Generics.MRSOP.AG (AnnFix , synthesize)
+
+import LW2019.Generics.MRSOP.Repr
 
 -- |Our digests come from Blake2s_256 
 newtype Digest

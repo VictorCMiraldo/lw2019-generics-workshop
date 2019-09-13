@@ -41,13 +41,13 @@ deriveFamily [t| Rose Int |]
 -- of opaque types, we can do so in a few easy steps:
 
 -- 1) Enumerate the types we want available
-data MyOpq = MyString
+data MyOpq = MyInt
 
 -- 2) Create an interpretation back into Hask
 data MyOpqI :: MyOpq -> * where
-  Opq_String :: String -> MyOpqI MyString
+  Opq :: Int -> MyOpqI MyInt
 
 -- 3) Call 'deriveDamilyWith' passing the interpretation
 -- of our selection of opaque types.
-deriveFamilyWith ''MyOpqI [t| LambdaLet String |]
+deriveFamilyWith ''MyOpqI [t| LambdaLet Int |]
   
