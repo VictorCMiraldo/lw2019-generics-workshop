@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: c9b034b1c518bcd30bc71ae12fb46ca3f53d4a9da7be6ed8e0fd1baa989dcd9d
+-- hash: 2030268bd94a423709ee6a0838252181fa5a019d4393403078ae46bc4e9b5502
 
 name:           lw2019-generics-workshop
 version:        0.0.0
@@ -26,6 +26,7 @@ library
       LW2019.Generics.GHC.Height
       LW2019.Generics.GHC.Repr
       LW2019.Generics.GHC.ShapeEquality
+      LW2019.Generics.MRSOP.Arbitrary
       LW2019.Generics.MRSOP.Equality
       LW2019.Generics.MRSOP.Height
       LW2019.Generics.MRSOP.MerkleTrees
