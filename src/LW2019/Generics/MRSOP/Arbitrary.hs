@@ -81,7 +81,7 @@ class EnumProd (ki :: kon -> *) (codes :: [[[Atom kon]]]) (prod :: [Atom kon])
 
 instance EnumProd ki codes '[] where
   isRec   _ _ _   = False
-  genProd _ _ _ _ = return NP0
+  genProd _ _ _ _ = return Nil
 
 -- |When we find an @I xi@ on the list of fields, this is a recursive field.
 instance (EnumConstr ki codes (Lkup xi codes) , IsNat xi , EnumProd ki codes xs)

@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 2030268bd94a423709ee6a0838252181fa5a019d4393403078ae46bc4e9b5502
+-- hash: ee088845f5c08f281a07b70546257e6831ded2fa710ba5e7cff56a25c599a937
 
 name:           lw2019-generics-workshop
 version:        0.0.0
@@ -51,8 +51,7 @@ library
     , base >=4.9 && <5
     , bytestring
     , cryptonite
-    , generic-random
-    , generics-mrsop >=2.0.0
+    , generics-mrsop >=2.2.0
     , generics-sop
     , hspec
     , memory
@@ -71,8 +70,7 @@ test-suite spec
     , base >=4.9 && <5
     , bytestring
     , cryptonite
-    , generic-random
-    , generics-mrsop >=2.0.0
+    , generics-mrsop >=2.2.0
     , generics-sop
     , hspec
     , lw2019-generics-workshop

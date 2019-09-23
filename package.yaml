@@ -9,13 +9,12 @@ category: Other
 dependencies:
   - base >= 4.9 && < 5
   - generics-sop  
-  - generics-mrsop >= 2.0.0
+  - generics-mrsop >= 2.2.0
   - cryptonite
   - memory
   - bytestring
   - QuickCheck
   - hspec
-  - generic-random
 
 library:
   source-dirs: src/

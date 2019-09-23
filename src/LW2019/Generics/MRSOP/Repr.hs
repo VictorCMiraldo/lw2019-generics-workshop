@@ -1,3 +1,4 @@
+{-# LANGUAGE StandaloneDeriving #-}
 {-# LANGUAGE KindSignatures        #-}
 {-# LANGUAGE FlexibleInstances     #-}
 {-# LANGUAGE TypeSynonymInstances  #-}
@@ -22,13 +23,13 @@ type FamQualName_   = '[ QualName ]
 type CodesQualName_ = '[ '[ '[K KString] , '[K KString , I Z]]]
 
 instance Family Singl FamQualName_ CodesQualName_ where
-  sfrom' SZ (El (Base str))   = Rep $ Here (NA_K (SString str) :* NP0)
+  sfrom' SZ (El (Base str))   = Rep $ Here (NA_K (SString str) :* Nil)
   sfrom' SZ (El (Qual str n)) = Rep $ There (Here ((NA_K (SString str))
                                                :* (NA_I (El n))
-                                               :* NP0))
+                                               :* Nil))
 
-  sto' SZ (Rep (Here (NA_K (SString str) :* NP0))) = El (Base str)
-  sto' SZ (Rep (There (Here (NA_K (SString str) :* NA_I (El n) :* NP0))))
+  sto' SZ (Rep (Here (NA_K (SString str) :* Nil))) = El (Base str)
+  sto' SZ (Rep (There (Here (NA_K (SString str) :* NA_I (El n) :* Nil))))
     = El (Qual str n)
 
 -- We don't support parameters though;
@@ -46,6 +47,9 @@ data MyOpq = MyInt
 -- 2) Create an interpretation back into Hask
 data MyOpqI :: MyOpq -> * where
   Opq :: Int -> MyOpqI MyInt
+
+deriving instance Show (MyOpqI x) 
+deriving instance Eq   (MyOpqI x) 
 
 -- 3) Call 'deriveDamilyWith' passing the interpretation
 -- of our selection of opaque types.

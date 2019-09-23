@@ -1,3 +1,6 @@
 resolver: lts-14.1
 
+extra-deps:
+  - git: git@github.com:VictorCMiraldo/generics-mrsop.git
+    commit: d892f9330d5e7fd6fab5fc3305bdf563bb9e6b1f
 

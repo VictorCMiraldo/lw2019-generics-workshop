@@ -3,7 +3,21 @@
 # For more information, please see the documentation at:
 #   https://docs.haskellstack.org/en/stable/lock_files
 
-packages: []
+packages:
+- completed:
+    cabal-file:
+      size: 1790
+      sha256: 5ea5325b02068b5668ab10badd34ae32e4bbeaaf72d87bfe25d581b72ee4837f
+    name: generics-mrsop
+    version: 2.2.0
+    git: git@github.com:VictorCMiraldo/generics-mrsop.git
+    pantry-tree:
+      size: 2094
+      sha256: 2ca9d28f4edafb3a2a6c45c36999a365ca123be60053e397b0dc0158a1a74e65
+    commit: d892f9330d5e7fd6fab5fc3305bdf563bb9e6b1f
+  original:
+    git: git@github.com:VictorCMiraldo/generics-mrsop.git
+    commit: d892f9330d5e7fd6fab5fc3305bdf563bb9e6b1f
 snapshots:
 - completed:
     size: 523448

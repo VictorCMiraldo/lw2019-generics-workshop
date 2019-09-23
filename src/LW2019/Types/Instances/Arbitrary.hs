@@ -15,7 +15,6 @@ import LW2019.Generics.MRSOP.Arbitrary
 import Generics.MRSOP.Base
 import Generics.MRSOP.Opaque
 
-import Generic.Random
 import Test.QuickCheck
 
 instance Arbitrary (Singl 'KString) where
