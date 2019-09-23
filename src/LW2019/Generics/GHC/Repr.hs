@@ -28,10 +28,10 @@ instance Generic BookInfo where
 
   to (K1 name :*: K1 isbn :*: K1 price)
     = BookInfo name isbn price
+
   from (BookInfo name isbn price)
     = K1 name :*: K1 isbn :*: K1 price
 
--- This example was easy though, no recursion whatosever.
 -- Let's look into 'QualName':
 instance Generic QualName where
   type Rep QualName = K1 R String :+: (K1 R String :*: K1 R QualName)

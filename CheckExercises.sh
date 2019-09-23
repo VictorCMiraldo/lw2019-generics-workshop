@@ -1,7 +1,7 @@
 #! /bin/bash
 set -uo pipefail
 
-exs=("All" "Equality")
+exs=("All" "/Equality" "/ShapeEquality")
 
 ix=0
 for exercise in ${exs[*]}; do

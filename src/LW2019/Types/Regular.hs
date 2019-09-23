@@ -1,3 +1,4 @@
+{-# LANGUAGE DeriveFunctor #-}
 -- |Here we will find regular datatypes to
 -- experiment with. Some with recursion,
 -- some without recursion.
@@ -23,5 +24,5 @@ data Tree12 a
   = Leaf
   | Node1 a (Tree12 a)
   | Node2 a (Tree12 a) (Tree12 a)
-  deriving (Show)
+  deriving (Show , Functor)
 

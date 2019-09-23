@@ -8,9 +8,9 @@ import LW2019.Generics.MRSOP.Repr
 
 import Generics.MRSOP.Base
 
-gseq :: (Family ki fam codes)
-     => El fam ix -> El fam ix -> Bool
-gseq x y = go (dfrom x) (dfrom y)
+shapeEq :: (Family ki fam codes)
+        => El fam ix -> El fam ix -> Bool
+shapeEq x y = go (dfrom x) (dfrom y)
   where
     go :: Fix ki codes ix -> Fix ki codes ix -> Bool
     go (Fix x) (Fix y) = case zipRep x y of

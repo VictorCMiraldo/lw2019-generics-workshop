@@ -60,9 +60,7 @@ instance {-# OVERLAPPING #-} (ShapeEq orig orig)
     => GShapeEq orig (K1 R orig) where
   gshapeEq p (K1 x) (K1 y) = shapeEq p x y
 
-instance ShapeEq BookInfo BookInfo where
-instance ShapeEq QualName QualName where
-
-go :: QualName -> QualName -> Bool
-go = shapeEq (Proxy :: Proxy QualName)
+instance ShapeEq BookInfo BookInfo     where
+instance ShapeEq QualName QualName     where
+instance ShapeEq (Tree12 a) (Tree12 a) where
 

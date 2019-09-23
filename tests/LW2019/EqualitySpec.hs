@@ -1,15 +1,13 @@
-{-# LANGUAGE FlexibleInstances #-}
-{-# LANGUAGE DeriveGeneric #-}
+{-# LANGUAGE FlexibleInstances  #-}
+{-# LANGUAGE DeriveGeneric      #-}
 {-# LANGUAGE StandaloneDeriving #-}
-{-# LANGUAGE ConstraintKinds  #-}
-{-# LANGUAGE RankNTypes       #-}
-{-# LANGUAGE KindSignatures   #-}
-{-# LANGUAGE TypeApplications #-}
-{-# LANGUAGE GADTs            #-}
-{-# LANGUAGE PolyKinds        #-}
+{-# LANGUAGE ConstraintKinds    #-}
+{-# LANGUAGE RankNTypes         #-}
+{-# LANGUAGE KindSignatures     #-}
+{-# LANGUAGE TypeApplications   #-}
+{-# LANGUAGE GADTs              #-}
+{-# LANGUAGE PolyKinds          #-}
 module LW2019.EqualitySpec (spec) where
-
-import Data.Proxy
 
 import LW2019.Types.Regular
 import LW2019.Types.MutuallyRecursive

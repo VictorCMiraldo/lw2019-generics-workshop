@@ -15,9 +15,9 @@ import LW2019.Generics.SOP.Repr
 import LW2019.Generics.SOP.AnnotateRec
 import Generics.SOP
 
-gshapeEq :: forall a . (Generic a , All (AnnotateRec a) (Code a))
-         => a -> a -> Bool
-gshapeEq x y = go (from x) (from y)
+shapeEq :: forall a . (Generic a , All (AnnotateRec a) (Code a))
+        => a -> a -> Bool
+shapeEq x y = go (from x) (from y)
   where
     go :: forall xss. (All (AnnotateRec a) xss, All SListI xss)
        => SOP I xss -> SOP I xss -> Bool
@@ -28,7 +28,7 @@ gshapeEq x y = go (from x) (from y)
     go _             _             = False
 
     seq :: Ann a b -> Ann a b -> K Bool b
-    seq (Rec x) (Rec y) = K (gshapeEq x y)
+    seq (Rec x) (Rec y) = K (shapeEq x y)
     seq _       _       = K True
 
 
