@@ -1,3 +1,6 @@
+{-# LANGUAGE UndecidableInstances #-}
+{-# LANGUAGE StandaloneDeriving #-}
+{-# LANGUAGE DeriveFunctor #-}
 module LW2019.Prelude where
 
 -- |Take a simple Binary Tree type:
@@ -20,7 +23,8 @@ to (Left ())         = Leaf
 to (Right (a, l, r)) = Fork a l r
 
 from :: Bin a -> Bin' a
-from = undefined
+from Leaf         = Left ()
+from (Fork a l r) = Right (a , l , r)
 
 -- * Recursion
 
@@ -28,13 +32,13 @@ from = undefined
 -- fixpoint of some functor. In our case, 'Bin' above
 -- can be seen as @Fix (BinF a)@,
 newtype BinF a x = BinF { unBinF :: Either () (a , x , x) }
+  deriving (Show , Functor)
 
 newtype Fix f    = Fix { unFix :: f (Fix f) }
+deriving instance (Show (f (Fix f))) => Show (Fix f)
 
-binToFixBinF :: Bin a -> Fix (BinF a)
-binToFixBinF Leaf         = Fix (BinF (Left ()))
-binToFixBinF (Fork a l r) = undefined
+deep_from :: Bin a -> Fix (BinF a)
+deep_from = Fix . fmap deep_from . BinF . from
 
-fixBinFToBin :: Fix (BinF a) -> Bin a
-fixBinFToBin (Fix (BinF (Left ())))           = Leaf
-fixBinFToBin (Fix (BinF (Right (a , l , r)))) = undefined
+deep_to :: Fix (BinF a) -> Bin a
+deep_to = to . unBinF . fmap deep_to . unFix

@@ -16,7 +16,7 @@ geq x y = go (from x) (from y)
   where
     go :: forall xss. (All2 Eq xss, All SListI xss)
        => SOP I xss -> SOP I xss -> Bool
-    go (SOP (Z xs))  (SOP (Z ys))  = and . hcollapse $ hcliftA2 p eq xs ys
+    go (SOP (Z xs))  (SOP (Z ys))  = and . hcollapse $ hczipWith p eq xs ys
     go (SOP (S xss)) (SOP (S yss)) = go (SOP xss) (SOP yss)
     go _             _             = False
 
@@ -25,6 +25,10 @@ geq x y = go (from x) (from y)
 
     eq :: forall (a :: *). Eq a => I a -> I a -> K Bool a
     eq (I a) (I b) = K (a == b)
+
+-- Now, we need to instruct GHC to use the generi equality
+-- whenever it is prompted with resolving an Eq constraint
+-- for our types.
 
 instance Eq QualName where
   x == y = geq x y

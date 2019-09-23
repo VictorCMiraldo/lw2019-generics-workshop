@@ -154,7 +154,102 @@ data NP (f :: K -> *) :: [k] where
 ```
 
 Lets write the equality function for sums of products
-\exercise{LW2019/Generics/SOP/Equality.hs}        
+\exercise{LW2019/Generics/SOP/Equality.hs} 
+
+## Keep Note of These Types:
+
+The `hcollapse` and `hczipWith` have complicated types on hackage.
+
+Here, we use them with the types:
+
+```haskell
+hcollapse :: NP (K a) xs -> [a]
+
+hczipWith :: (forall x . Eq x => f x -> g x -> h x)
+          -> NP f xs -> NP g xs -> NP h xs
+```      
+
+## Making it More Complicated
+
+What if we are interested only on whether two values
+have the same *shape*?
+
+```haskell
+shapeEq [1,2,3] [5,6,7] == True
+shapeEq [1,2,3] [5,6]   == False
+```
+
+\pause
+
+What changes from regular equality? \pause
+
+It's about to get ugly, we need to know where
+the recursive pieces of the type are.
+
+\exercise{LW2019/Generics/GHC/ShapeEquality.hs}
+
+## Poor Man's Recursion
+
+Where we had,
+
+```haskell
+class GEq a where ...
+```
+
+\pause
+We now track the recursive the type,
+
+```haskell
+class GShapeEq orig a where ...
+  gshapeEq :: Proxy orig -> a -> a -> Bool
+
+...
+
+instance {-# OVERLAPPING  #-} GShapeEq orig (K1 orig) where ...
+instance {-# OVERLAPPABLE #-} GShapeEq orig (K1 a) where ...
+``` 
+
+\pause
+And the instances are declared as
+
+```haskell
+instance ShapeEq (Tree12 a) (Tree12 a) 
+```
+
+## Middle Class Man's Recursion (SOP)
+
+With `generics-sop` we only need to to the work once.
+
+Define an annotated type.
+
+```haskell
+data Ann orig :: * -> * where
+  Rec   :: orig -> Ann orig orig
+  NoRec :: x    -> Ann orig x
+```
+
+And define instances to annotate $n$-ary products.
+
+```haskell
+class AnnotateRec orig (prod :: [ * ]) where
+  annotate :: NP I prod -> NP (Ann orig) prod
+```
+
+\emacsonly{LW2019/Generics/SOP/AnnotateRec.hs}
+
+## Middle Class Man's Recursion (SOP)
+
+Let's now define shape equality for sop.
+
+\exercise{LW2019/Generics/SOP/ShapeEquality.hs}
+
+\pause
+
+* How did `Generics.GHC.Equality` had to change
+  to have shape equality?
+
+* How did `Generics.SOP.Equality` had to change?
+
 
 ## The Set of Mutually Recursive Datatypes
 
