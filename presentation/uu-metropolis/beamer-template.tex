@@ -278,16 +278,20 @@ $endif$
 
 \newcommand{\clonetherepo}{%
 \setbeamercolor{block body}{use=structure,fg=white,bg=almostBlackish}
-\begin{exampleblock}{Exercise:}
+\begin{exampleblock}{Clone and Build:}
 \begin{alltt}
  \small
  \hspace{0.2em}  .../ \$$ git clone \\ % breaks latex!haha \rotatebox{180}{$$\Rsh$$} \\
-    \hspace{1em} https://github.com/VictorCMiraldo/lw2019-generics-workshop.git
+    \hspace{1em} https://github.com/VictorCMiraldo/lw2019-generics-workshop.git \\
+  \hspace{0.2em} .../ \$$ stack build  % $$
 \end{alltt}
 \end{exampleblock}
 }
 
 
+% Make code lines closer together
+\let\oldShaded\Shaded
+\def\Shaded{\oldShaded \linespread{0.8}}
 
 \begin{document}
 

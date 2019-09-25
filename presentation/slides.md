@@ -6,13 +6,17 @@ subtitle: Hands-On Workshop @ Lambda World
 institute: Utrecht University
 theme: metropolis
 mainfont: Open Sans
-mainfontoptions: Scale=0.8
+mainfontoptions: Scale=0.9
 sansfont: Open Sans
-sansfontoptions: Scale=0.6
+sansfontoptions: Scale=0.9
 monofont: Ubuntu Mono
-monofontoptions: Scale=0.7
+monofontoptions: Scale=0.8
 handout: true
 ---
+
+## Preamble
+
+\clonetherepo
 
 ## Motivation
 
@@ -20,11 +24,11 @@ Bob maintains networking code, Alice decides to add
 another field to some datatype used indirectly.\pause
 
 * No generics involved:
-  + Compile-time failures if we have types\pause
+    + Compile-time failures if we have types\pause
 
 * Generics involved:
-  + Nothing happens, generic infrastructure handles this 
-    automatically.
+    + Nothing happens, generic infrastructure handles this 
+      automatically.
 
 ## Well Known Generic Problems
 
@@ -46,28 +50,42 @@ another field to some datatype used indirectly.\pause
 
 ## Today
 
-\clonetherepo
-
 * Three Generic Programming Libraries
     - `GHC.Generics`, \pause the builtin generics powerhorse
     - `Generics.SOP`, \pause with expressive combinator-based programming
     - `Generics.MRSOP`, \pause combinator-based programming with mutual recursion
 
-* Important: Clone the repository
-    - `https://github.com/VictorCMiraldo/lw2019-generics-workshop.git`
+
 
 ## Datatype Building Blocks
 
-Datatypes can be constructed with sums, products and the unit type.
+Datatypes can be constructed with sums, products the unit type
+and the least fixpoint.
 
-\vfill
+We can unwrap \emph{one layer} of a recursive type:
+
+```haskell
+data List a = Nil | Cons a (List a)
+
+to :: Either () (a , List a) -> List a
+to (Left ())       = Nil
+to (Righ (x , xs)) = Cons x xs
+
+from :: List a -> Either () (a , List a)
+```
+
+Or encode recursion explicitely:
+
+```haskell
+newtype Fix f = Fix (f (Fix f))
+newtype ListF a x = ListF (Either () (a , x))
+```
+
+## Datatype Building Blocks
 
 \exercise{LW2019/Prelude.hs}
 
 \vfill
-
-Note the `from` and `to` functions converting between generic
-and original representations.
 
 \pause
 
@@ -76,7 +94,7 @@ Meet the regular datatypes we will use today:
 
 ## Datatype Building Blocks: Standardizing
 
-`GHC.Generics` standard combinators:
+`GHC.Generics` standard combinators instead of `Either`, `(,)`, ...
 
 \vfill
 
@@ -98,12 +116,9 @@ Let's write `GHC.Generic` instances.
 
 ## The Set of Regular Datatypes
 
-* Lists, Binary Trees, etc... Constructed using sums, products, unit and least fixpoints:
-    ```haskell
-    newtype Fix f = Fix { unFix :: f (Fix f) }
-    ```
+* Lists, Binary Trees, etc... Constructed using sums, products, unit and least fixpoints.
 
-* `GHC.Generics` does not represent recursion explicitely.
+* `GHC.Generics` \emph{does not} represent recursion explicitely.
 
 * Standardized combinators allow us to write functions
   by \emph{induction on the structure of the generic representation}.
@@ -151,6 +166,8 @@ data NS (f :: k -> *) :: [k] where
 data NP (f :: K -> *) :: [k] where
   Nil  :: NP f []
   Cons :: f x -> NP f xs -> NP f (x ': xs)
+
+newtype SOP f code = SOP (NS (NP f) codes)
 ```
 
 Lets write the equality function for sums of products
@@ -158,7 +175,7 @@ Lets write the equality function for sums of products
 
 ## Keep Note of These Types:
 
-The `hcollapse` and `hczipWith` have complicated types on hackage.
+The `hcollapse` and `hczipWith` type signatures can hurt.
 
 Here, we use them with the types:
 
@@ -168,6 +185,8 @@ hcollapse :: NP (K a) xs -> [a]
 hczipWith :: (forall x . Eq x => f x -> g x -> h x)
           -> NP f xs -> NP g xs -> NP h xs
 ```      
+
+\vfill
 
 ## Making it More Complicated
 
@@ -183,13 +202,6 @@ shapeEq [1,2,3] [5,6]   == False
 
 What changes from regular equality? \pause
 
-It's about to get ugly, we need to know where
-the recursive pieces of the type are.
-
-\exercise{LW2019/Generics/GHC/ShapeEquality.hs}
-
-## Poor Man's Recursion
-
 Where we had,
 
 ```haskell
@@ -200,25 +212,57 @@ class GEq a where ...
 We now track the recursive the type,
 
 ```haskell
+class ShapeEq orig a where ...
+
 class GShapeEq orig a where ...
   gshapeEq :: Proxy orig -> a -> a -> Bool
+```
 
-...
+## Poor Man's Recursion
 
-instance {-# OVERLAPPING  #-} GShapeEq orig (K1 orig) where ...
+Example Instance Search:
+
+```haskell
+ShapeEq (Tree12 a)
+
+GShapeEq (Tree12 a) (Rep (Tree12 a)) 
+
+   GShapeEq (Tree12 a) (U1 :+: (K1 R a :*: K1 R (Tree12 a)) :+: ...)
+
+      GShapeEq (Tree12 a) U1 -- Ok!
+
+      GShapeEq (Tree12 a) (K1 R a :*: K1 R (Tree12 a))
+ 
+         GShapeEq (Tree12 a) (K1 R a)          
+
+         GShapeEq (Tree12 a) (K1 R (Tree12 a)) 
+```
+
+## Poor Man's Recursion
+
+Use `OVERLAPPING` instances!
+
+```haskell
+instance {-# OVERLAPPING  #-} (ShapeEq orig orig) 
+  => GShapeEq orig (K1 orig) where ...
+
 instance {-# OVERLAPPABLE #-} GShapeEq orig (K1 a) where ...
 ``` 
 
 \pause
-And the instances are declared as
 
-```haskell
-instance ShapeEq (Tree12 a) (Tree12 a) 
-```
+\exercise{LW2019/Generics/GHC/ShapeEquality.hs}
+
+\pause
+
+And yes... We have to use the `orig` trick every time we need to
+have information about which fields of a constructor are
+recursive occurences of our type.
 
 ## Middle Class Man's Recursion (SOP)
 
-With `generics-sop` we only need to to the work once.
+The `generics-sop` approach saves some work. We only need to do the
+`orig` work once:
 
 Define an annotated type.
 
@@ -239,19 +283,108 @@ class AnnotateRec orig (prod :: [ * ]) where
 
 ## Middle Class Man's Recursion (SOP)
 
-Let's now define shape equality for sop.
+Let's define shape equality for `SOP` and compare!
 
 \exercise{LW2019/Generics/SOP/ShapeEquality.hs}
 
 \pause
 
-* How did `Generics.GHC.Equality` had to change
-  to have shape equality?
+* How far is `Generics.GHC.Equality` to `Generics.GHC.ShapeEquality`?
 
-* How did `Generics.SOP.Equality` had to change?
+\pause
+
+* How far is `Generics.SOP.Equality` from `ShapeEquality`?
+  
+\pause
+
+That's a consequence of the \emph{combinator based} approach, which
+is only possible because generic types come in \emph{normal form} (SOP, in this case)
+
+## Explicit Recursion
+
+Some libraries annotate recursion for us.
+
+However, once we have explicit recursion, we must decide which
+type of recursion to support.
+
+The `generics-mrsop` library supports Mutually Recursive Types,
+which are a superset of the regular types.
+
+\pause
+
+Example:
+
+* Regular: 
+```haskell
+data [a]     = [] | a : [a]
+data Tree a  = Leaf | Bin a (Tree a) (Tree a)
+data Maybe a = Nothing | Just a
+```
+
+* Mut. Rec.:
+```haskell
+data Zig = Zig | ZigZag Zag
+data Zag = Zag | ZagZig Zig
+```
+
+## Codes for Mutually Recursive Types
 
 
-## The Set of Mutually Recursive Datatypes
+```haskell
+data Zig = Zig | ZigZag Zag
+data Zag = Zag | ZagZig Zig
+```
+
+\pause
+
+```haskell
+type FamZig  = '[Zig , Zag]
+```
+
+\pause
+
+```haskell
+type CodeZig = '[ '[ '[] , '[ I 1 ] ]
+                , '[ '[] , '[ I 0 ] ] ]
+```
+
+\pause
+
+```haskell
+newtype Rep famF codes ix = Rep (NS (NP (NA famF)) (Lkup codes ix)
+
+data NA fam :: Atom -> * where
+  NA_I :: Lkup fam ix -> NA (I ix)
+  NA_K :: Opaque k    -> NA (K k)
+```
+
+## The `Generic` Class
+
+```haskell
+class Family (ki :: kon -> *) (fam :: [*]) (codes :: [[[Atom kon]]])
+  where
+
+    sfrom' :: SNat ix -> El fam ix -> Rep ki (El fam) (Lkup ix codes)
+
+    sto'   :: SNat ix -> Rep ki (El fam) (Lkup ix codes) -> El fam ix
+```
+
+\pause
+
+```haskell
+data SNat :: Nat -> * where
+  SZ :: SNat Z
+  SS :: SNat n -> SNat (S n)
+
+data El :: [k] -> Nat -> k where
+  El :: Lkup fam ix -> El fam ix
+
+```
+
+\pause
+
+\exercise{LW2019/Generic/MRSOP/Repr.hs}
+
 
 ## General Regular Datatypes
 
