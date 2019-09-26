@@ -14,21 +14,17 @@ import LW2019.Types.Regular
 import LW2019.Generics.SOP.Repr
 import Generics.SOP
 
--- Shape equality will suffer from a downside of
--- a combinator based approach. We will have to
--- resort to typeclasses in anyway, otherwise
--- we can't distinguish which fields should be recursed over.
+-- Shape equality uncovers downside of
+-- not having explicit recursion. We will have to
+-- resort to typeclasses to distinguish which bits of
+-- the type are recursive from those that are not.
 --
--- That being said, the typeclass monsters can be used only
--- to identify the recursive positions, once that's done,
--- we can go back to using a combinator-based approach.
---
--- Moreover, this is more reusable than GHC.Generics.
--- We are using the same mechanism for ShapeEquality and Height.
--- With GHC.Generics we had to duplicate the effort of
--- deciding whether a type was an occurence of a recursive
--- type or not.
+-- Unlike GHC.Generics, for SOP we can do this effort
+-- once and for all.
 
+
+-- The idea is that we will annotate a product type
+-- with information about its fields beint recursive or not.
 data Ann orig :: * -> * where
   Rec   :: orig -> Ann orig orig
   NoRec :: x    -> Ann orig x

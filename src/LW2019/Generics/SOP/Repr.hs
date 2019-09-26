@@ -11,30 +11,26 @@ import LW2019.Types.Regular
 -- Our generic library of study here will be:
 import Generics.SOP
 import Generics.SOP.TH
-import qualified GHC.Generics as GHC
 
--- * Generic Representation of Regular Types
-
--- Here we define all by hand
 instance Generic BookInfo where
   -- Only one constructor with three fields
-  type Code BookInfo = '[[String , String , Float]]
+  type Code BookInfo = '[ '[String , String , Float] ]
 
   to (SOP (Z (I name :* I isbn :* I price :* Nil)))
     = BookInfo name isbn price
   from (BookInfo name isbn price)
     = (SOP (Z (I name :* I isbn :* I price :* Nil)))
 
--- But hey: generics-sop has "Generic Generic Programming",
--- meaning that it can use GHC.Generics instances to
--- derive generics-sop 'Generic' instances:
---
--- > deriving instance GHC.Generic QualName
--- > instance Generic QualName 
---
--- This only works for automatically generated GHC.Generic
--- instances.
-deriveGeneric ''QualName
+
+instance Generic QualName where
+  type Code QualName = '[ '[String]
+                        , '[String , QualName] ]
+
+  to (SOP    (Z (I b :* Nil)))         = Base b
+  to (SOP (S (Z (I b :* I r :* Nil)))) = Qual b r
+
+  from (Base b)   = SOP    (Z (I b :* Nil))
+  from (Qual b r) = SOP (S (Z (I b :* I r :* Nil)))
 
 -- We can also use template haskell to derive our instances.
 -- What's the generated code? Again, we can check by

@@ -28,9 +28,11 @@ gheight0 x = go (dfrom x)
     recHeight (NA_I x) = 1 + go x
 
 -- Well, like most recursive functions, computing the
--- height of a tree is a catamorphism.
+-- height of a tree is a catamorphism (aka fold).
 --
--- For that we need an algebra.
+-- For that we need an algebra that given a generic representation
+-- of a type where the height of the recursive parts have already been
+-- computed, assemblesthis into a new height.
 heightAlg :: Rep ki (Const Int) sum -> Const Int iy
 heightAlg = elimRep (const (Const 0))
                     (Const . (1+) . getConst)

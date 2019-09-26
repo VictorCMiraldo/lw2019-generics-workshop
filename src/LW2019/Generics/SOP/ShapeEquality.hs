@@ -15,6 +15,12 @@ import LW2019.Generics.SOP.Repr
 import LW2019.Generics.SOP.AnnotateRec
 import Generics.SOP
 
+-- Keep in mind:
+--
+-- > hliftA2 :: (forall a. f a -> g a -> h a)
+-- >         -> NP f xs -> NP g xs -> NP h xs
+
+
 shapeEq :: forall a . (Generic a , All (AnnotateRec a) (Code a))
         => a -> a -> Bool
 shapeEq x y = go (from x) (from y)

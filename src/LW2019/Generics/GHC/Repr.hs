@@ -56,7 +56,7 @@ deriving instance Generic (Tree12 a)
 -- Can you distil a simpler way of writing that type?
 -- Bear in mind that "Rec0" is just "K1 R":
 
-type Tree12Rep a -- make it undef
+type Tree12Rep a 
   =   U1
   :+: (K1 R a :*: K1 R (Tree12 a))
   :+: (K1 R a :*: K1 R (Tree12 a) :*: K1 R (Tree12 a))

@@ -17,19 +17,19 @@ import GHC.Generics
 
 import Data.Proxy
 
--- Ok... now that we've done equality in GHC.Generic
--- and Generics.SOP, let's try someting a little more
--- involved.
-
+-- Just like equality; but now we keep track of the
+-- datatype we are defining shape equality over, so that
+-- we can recognize recursive bits.
 class ShapeEq orig a where
+  -- We need to pass a proxy so that the typechecker can
+  -- distinuish between different orig.
   shapeEq :: Proxy orig -> a -> a -> Bool
   default shapeEq
     :: (Generic a , GShapeEq orig (Rep a))
     => Proxy orig -> a -> a -> Bool
   shapeEq p x y = gshapeEq p (from x) (from y)
 
--- |Generic /shape equality/ class. Note how we must carry
--- around the type we are doing recursion over!
+-- The generic class is the same
 class GShapeEq orig (t :: * -> *) where
   gshapeEq :: Proxy orig -> t x -> t y -> Bool
 

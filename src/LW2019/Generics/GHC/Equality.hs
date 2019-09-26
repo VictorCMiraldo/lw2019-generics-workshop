@@ -15,40 +15,52 @@ import LW2019.Generics.GHC.Repr
 -- Our generic library of study here will be:
 import GHC.Generics
 
--- |Here we shall define equality for a range of types.
--- The @default@ keyword shows the "for free" implementation,
--- to access it, use:
+-- Here we shall define equality for a range of types.
+-- The @default@ keyword instructs GHC to use that
+-- implementation when none is provided. It gets
+-- triggered when declaring instances like:
 --
 -- > instance Eq' YourType
 --
 class Eq' a where
   eq :: a -> a -> Bool
+  -- Note that when using the default implementation, we require
+  -- the type to be an instance of Generic. The GEq' class will be
+  -- defined for ALL possible representations.
   default eq
      :: (Generic a , GEq' (Rep a))
      => a -> a -> Bool
   eq x y = geq (from x) (from y)
 
--- |The generic equality is actually defined by induction
+-- The generic equality is then defined by induction
 -- on the /structure/ of the representation.
 class GEq' (f :: * -> *) where
   geq :: f x -> f y -> Bool
 
+-- Base Case: Unit type
 instance GEq' U1 where
   geq U1 U1 = True
 
+-- Inductive case: Assuming f and g have equality;
+-- how do we compare values of type (f :*: g) for equality?
 instance (GEq' f , GEq' g) => GEq' (f :*: g) where
   geq (f1 :*: g1) (f2 :*: g2) = geq f1 f2 && geq g1 g2
 
+-- Inductive case: Assuming f and g have equality;
+-- how do we compare values of type (f :+: g) for equality?
 instance (GEq' f , GEq' g) => GEq' (f :+: g) where
   geq (L1 f1) (L1 f2) = geq f1 f2
   geq (R1 g1) (R1 g2) = geq g1 g2
   geq _       _       = False
 
+-- Meta Information is simply ignored
 instance (GEq' f) => GEq' (M1 i s f) where
   geq (M1 x) (M1 y) = geq x y
 
+-- Tying the knot: Note how we ask an Eq' constraint for the type a
 instance (Eq' a) => GEq' (K1 R a) where
   geq (K1 x) (K1 y) = eq x y
+
 
 -- Now we declare some instances for our base types
 instance Eq' String where

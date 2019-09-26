@@ -1,4 +1,4 @@
-{-# LANGUAGE StandaloneDeriving #-}
+{-# LANGUAGE StandaloneDeriving    #-}
 {-# LANGUAGE KindSignatures        #-}
 {-# LANGUAGE FlexibleInstances     #-}
 {-# LANGUAGE TypeSynonymInstances  #-}
@@ -22,6 +22,9 @@ deriveFamily  [t| BookInfo |]
 type FamQualName_   = '[ QualName ]
 type CodesQualName_ = '[ '[ '[K KString] , '[K KString , I Z]]]
 
+-- Here and There are synonyms to SOP.Z and SOP.S; but since
+-- we use natural numbers here, it can get confusing.
+
 instance Family Singl FamQualName_ CodesQualName_ where
   sfrom' SZ (El (Base str))   = Rep $ Here (NA_K (SString str) :* Nil)
   sfrom' SZ (El (Qual str n)) = Rep $ There (Here ((NA_K (SString str))
@@ -35,8 +38,28 @@ instance Family Singl FamQualName_ CodesQualName_ where
 -- We don't support parameters though;
 deriveFamily [t| Tree12 Int |]
 
--- But we support fancier types just like that!
-deriveFamily [t| Rose Int |]
+-- Let's now define a more interesting one
+
+-- |All codes packed in a type-level list
+type CodesRose = '[  '[ '[]                  , '[ 'I ('S 'Z) , 'I 'Z] ]
+                  ,  '[ '[ 'K 'KInt , 'I 'Z] ]
+                  ]
+
+-- |The types corresponding the the codes in 'CodesRose'
+-- appear in the same order.
+type FamRose   = '[ [Rose Int] , Rose Int] 
+
+instance Family Singl FamRose CodesRose where
+  sfrom' (SS SZ) (El (Rose a as)) = Rep $ Here (NA_K (SInt a) :* NA_I (El as) :* Nil)
+  sfrom' SZ (El [])              = Rep $ Here Nil
+  sfrom' SZ (El (x:xs))          = Rep $ There (Here (NA_I (El x) :* NA_I (El xs) :* Nil))
+
+  sto' SZ (Rep (Here Nil))
+    = El []
+  sto' SZ (Rep (There (Here (NA_I (El x) :* NA_I (El xs) :* Nil))))
+    = El (x : xs)
+  sto' (SS SZ) (Rep (Here (NA_K (SInt a) :* NA_I (El as) :* Nil)))
+    = El (Rose a as)
 
 -- Or, say we actually want to have a particular selection
 -- of opaque types, we can do so in a few easy steps:
