@@ -12,6 +12,10 @@ sansfontoptions: Scale=0.9
 monofont: Ubuntu Mono
 monofontoptions: Scale=0.8
 handout: true
+natbib: true
+biblio-title: Reading Material
+bibliography: 
+ - references.bib
 ---
 
 ## Preamble
@@ -186,12 +190,32 @@ hczipWith :: (forall x . Eq x => f x -> g x -> h x)
           -> NP f xs -> NP g xs -> NP h xs
 ```      
 
+\pause
+
+Is it possible to write a `hccollapse` version for `GHC.Generics`?
+
 \vfill
 
-## Making it More Complicated
+## So Far
 
-What if we are interested only on whether two values
-have the same *shape*?
+* Datatypes are built from standard combinators
+
+* We can program by induction on this language
+
+* Datatypes that come reified from Haskell are in
+a normal form: SOP
+    - Which enables for expressive combinators
+
+\pause
+
+\alert{What's Missing?}
+
+* Recursion!
+
+## Recursion Example
+
+At what point do we start needing information about
+recursive parts of a datatype?
 
 ```haskell
 shapeEq [1,2,3] [5,6,7] == True
@@ -200,9 +224,7 @@ shapeEq [1,2,3] [5,6]   == False
 
 \pause
 
-What changes from regular equality? \pause
-
-Where we had,
+What changes from regular equality? \pause Where we had,
 
 ```haskell
 class GEq a where ...
@@ -218,7 +240,7 @@ class GShapeEq orig a where ...
   gshapeEq :: Proxy orig -> a -> a -> Bool
 ```
 
-## Poor Man's Recursion
+## Recursion Example: `GHC.Generics`
 
 Example Instance Search:
 
@@ -238,7 +260,7 @@ GShapeEq (Tree12 a) (Rep (Tree12 a))
          GShapeEq (Tree12 a) (K1 R (Tree12 a)) 
 ```
 
-## Poor Man's Recursion
+## Recursion Example: `GHC.Generics`
 
 Use `OVERLAPPING` instances!
 
@@ -259,7 +281,7 @@ And yes... We have to use the `orig` trick every time we need to
 have information about which fields of a constructor are
 recursive occurences of our type.
 
-## Middle Class Man's Recursion (SOP)
+## Recursion Example: `SOP`
 
 The `generics-sop` approach saves some work. We only need to do the
 `orig` work once:
@@ -281,7 +303,7 @@ class AnnotateRec orig (prod :: [ * ]) where
 
 \emacsonly{LW2019/Generics/SOP/AnnotateRec.hs}
 
-## Middle Class Man's Recursion (SOP)
+## Recursion Example: `SOP`
 
 Let's define shape equality for `SOP` and compare!
 
@@ -302,11 +324,6 @@ is only possible because generic types come in \emph{normal form} (SOP, in this 
 
 ## Explicit Recursion
 
-Some libraries annotate recursion for us.
-
-However, once we have explicit recursion, we must decide which
-type of recursion to support.
-
 The `generics-mrsop` library supports Mutually Recursive Types,
 which are a superset of the regular types.
 
@@ -321,7 +338,7 @@ data Tree a  = Leaf | Bin a (Tree a) (Tree a)
 data Maybe a = Nothing | Just a
 ```
 
-* Mut. Rec.:
+* Mutually Recursive:
 ```haskell
 data Zig = Zig | ZigZag Zag
 data Zag = Zag | ZagZig Zig
@@ -351,19 +368,27 @@ type CodeZig = '[ '[ '[] , '[ I 1 ] ]
 \pause
 
 ```haskell
-newtype Rep famF codes ix = Rep (NS (NP (NA famF)) (Lkup codes ix)
-
-data NA fam :: Atom -> * where
-  NA_I :: Lkup fam ix -> NA (I ix)
-  NA_K :: Opaque k    -> NA (K k)
+type GZig = Rep NoOpq (Lkup FamZig) (Lkup CodesZig 0)
 ```
 
-## The `Generic` Class
+\pause
+```haskell
+newtype Rep ki f code = Rep (NS (NP (NA ki f)) code
+```
+
+```haskell
+data NA ki f :: Atom -> * where
+  NA_I :: f ix -> NA (I ix)
+  NA_K :: ki k -> NA (K k)
+```
+
+
+
+## The Sugar-free `Generic` Class
 
 ```haskell
 class Family (ki :: kon -> *) (fam :: [*]) (codes :: [[[Atom kon]]])
   where
-
     sfrom' :: SNat ix -> El fam ix -> Rep ki (El fam) (Lkup ix codes)
 
     sto'   :: SNat ix -> Rep ki (El fam) (Lkup ix codes) -> El fam ix
@@ -385,30 +410,87 @@ data El :: [k] -> Nat -> k where
 
 \exercise{LW2019/Generic/MRSOP/Repr.hs}
 
+## Equalities in `generics-mrsop`
 
-## General Regular Datatypes
+\exercise{LW2019/Generic/MRSOP/Equality.hs}
+\exercise{LW2019/Generic/MRSOP/ShapeEquality.hs}
 
-* Akin to regular languages
-* Simple recursion at most
-* Break simplistic pattern with
-  shape-equality. The Lack of knowledge about what
-  is recursive data or not will make this very hard to write in
-  GHC.Generics or Generics.SOP
+```haskell
+zipRep :: Rep ki f c -> Rep kj g c 
+       -> Maybe (Rep (ki :*: kj) (f :*: g) c) 
 
-## Generic Equality
+elimRep :: (forall k.  ki k  -> a)  -- eliminate opaques
+        -> (forall ix. f  ix -> a)  -- eliminate recursive positions
+        -> ([a] -> b)               -- combine the eliminated fields 
+        -> Rep ki f c               -- value we want to eliminate
+        -> b       
+```
 
-## Generic Serialization
+## Catamorphisms (AKA `fold`)
 
-## Sums of Products of Regular Datatypes
+Explicit Recursion enables generic recursion schemes!
 
-* Equality revisite
-* Serialization revisited
+```haskell
+cata :: (forall iy. Rep ki phi (Lkup iy codes) -> phi iy) 
+     -> Fix ki codes ix
+     -> phi ix
+```
+
+\exercise{LW2019/Generic/MRSOP/Height.hs}
 
 
-## Datatypes Building Blocks
+## Annotated Fixpoints
 
-## Normal Forms for Building Blocks
+Instead of consuming a type, we can choose to keep the intermediary
+results annotated in the tree.
 
-## Recursion
 
-## Mutual Recursion
+```haskell
+newtype AnnFix phi f = AnnFix (phi , f (AnnFix phi f))
+```
+
+## Annotated Fixpoints: `generics-mrsop`
+
+In `mrsop`, we need a slightly more complicated type, because
+of the indicies involved.
+
+\pause
+
+```haskell
+synthesize :: (forall iy . Rep ki phi (Lkup iy codes) -> phi iy)
+           -> Fix ki codes ix
+           -> AnnFix ki codes phi ix
+```
+
+where
+
+```haskell
+newtype AnnFix ki codes (phi :: Nat -> *) ix = ...
+```
+
+\pause
+
+\emacsonly{LW2019/Generics/MRSOP/MerkleTree.hs}
+
+## Advanced Material
+
+If you are into this kind of things, make sure to check
+the rest of the repository. For example,
+
+\emacsonly{LW2019/Generics/MRSOP/Arbitrary.hs}
+
+## Summary
+
+\begin{figure}\centering
+\begin{tabular}{@{}lll@{}}\toprule
+                        & Pattern Functors       & Codes                 \\ \midrule
+  No Explicit Recursion & \texttt{GHC.Generics}\cite{Magalhaes2010}  & \texttt{generics-sop}\cite{deVries2014} \\
+  Simple Recursion      &  \texttt{regular}\cite{vanNoort2010}      &  \multirow{2}{*}{\texttt{generics-mrsop}\cite{Miraldo2018}} \\
+  Mutual Recursion      &  \texttt{multirec}\cite{Yakushev2009}     &   \\
+\bottomrule
+\end{tabular}
+\end{figure}
+
+\pause
+
+Other approaches include support for GADT's\cite{Serrano2018} and higher kinded classes\cite{Serrano2019}.

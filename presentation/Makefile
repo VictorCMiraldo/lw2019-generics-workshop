@@ -1,4 +1,4 @@
-LATEXENGINE=--latex-engine=xelatex
+LATEXENGINE=--pdf-engine=xelatex
 
 default:slides.pdf
 
@@ -7,6 +7,7 @@ verbose:slides.md
 	  --slide-level=2\
 	  $(LATEXENGINE)\
 	  --verbose\
+	  --filter=pandoc-citeproc
 	  --template uu-metropolis/beamer-template.tex
 
 
@@ -22,6 +23,13 @@ tex: slides.md
 	  $(LATEXENGINE)\
 	  --verbose\
 	  --template uu-metropolis/beamer-template.tex
+
+bib: tex references.bib
+	xelatex slides.tex
+	bibtex slides
+	xelatex slides.tex
+	rm -f *.blg *.bbl *.aux *.log *.nav *.out *.snm *.toc *.vrb
+
 
 clean:
 	rm *.aux *.log *.nav *.out *.snm *.toc *.vrb

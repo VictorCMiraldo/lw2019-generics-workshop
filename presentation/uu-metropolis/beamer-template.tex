@@ -90,7 +90,6 @@ $endif$
 \newif\ifbibliography
 $if(natbib)$
 \usepackage{natbib}
-\bibliographystyle{$if(biblio-style)$$biblio-style$$else$plainnat$endif$}
 $endif$
 $if(biblatex)$
 \usepackage$if(biblio-style)$[style=$biblio-style$]$endif${biblatex}
@@ -132,6 +131,9 @@ $if(graphics)$
 % using explicit options in \includegraphics[width, height, ...]{}
 \setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
 $endif$
+
+\usepackage{booktabs}
+\usepackage{multirow}
 
 
 %% UU Specific colors
@@ -257,11 +259,13 @@ $endif$
 \newcommand{\exercise}[1]{%
 \setbeamercolor{block body}{use=structure,fg=white,bg=almostBlackish}
 \begin{exampleblock}{Exercise \arabic{exercisectr}:}
+\vspace{-.6em}
 \begin{alltt}
  \small
  \hspace{0.2em}  .../lw2019-generics-workshop \$$ git checkout -b \theexercisectr \\
  \hspace{0.2em}  .../lw2019-generics-workshop \$$ emacs #1
 \end{alltt}
+\vspace{-.8em}
 \end{exampleblock}
 \stepcounter{exercisectr}
 }
@@ -269,22 +273,26 @@ $endif$
 \newcommand{\emacsonly}[1]{%
 \setbeamercolor{block body}{use=structure,fg=white,bg=almostBlackish}
 \begin{exampleblock}{Discover:}
+\vspace{-.6em}
 \begin{alltt}
  \small
  \hspace{0.2em}  .../lw2019-generics-workshop \$$ emacs #1
 \end{alltt}
+\vspace{-.8em}
 \end{exampleblock}
 }
 
 \newcommand{\clonetherepo}{%
 \setbeamercolor{block body}{use=structure,fg=white,bg=almostBlackish}
 \begin{exampleblock}{Clone and Build:}
+\vspace{-.6em}
 \begin{alltt}
  \small
  \hspace{0.2em}  .../ \$$ git clone \\ % breaks latex!haha \rotatebox{180}{$$\Rsh$$} \\
     \hspace{1em} https://github.com/VictorCMiraldo/lw2019-generics-workshop.git \\
   \hspace{0.2em} .../ \$$ stack build  % $$
 \end{alltt}
+\vspace{-.8em}
 \end{exampleblock}
 }
 
@@ -321,6 +329,7 @@ $else$
 $endif$
 $endif$
 \begin{frame}[allowframebreaks]{$biblio-title$}
+\bibliographystyle{abbrv}
 \bibliographytrue
 \bibliography{$for(bibliography)$$bibliography$$sep$,$endfor$}
 \end{frame}
