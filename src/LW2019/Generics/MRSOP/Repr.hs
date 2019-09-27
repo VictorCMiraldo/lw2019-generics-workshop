@@ -42,7 +42,7 @@ deriveFamily [t| Tree12 Int |]
 
 -- |All codes packed in a type-level list
 type CodesRoseInt = '[  '[ '[]                  , '[ 'I ('S 'Z) , 'I 'Z] ]
-                     ,  '[ '[ 'K 'KInt , 'I 'Z] ]
+                     ,  '[ '[ K KInt , 'I 'Z ] ]
                      ]
 
 -- |The types corresponding the the codes in 'CodesRose'
@@ -50,16 +50,11 @@ type CodesRoseInt = '[  '[ '[]                  , '[ 'I ('S 'Z) , 'I 'Z] ]
 type FamRoseInt  = '[ [Rose Int] , Rose Int] 
 
 instance Family Singl FamRoseInt CodesRoseInt where
-  sfrom' (SS SZ) (El (Rose a as)) = Rep $ Here (NA_K (SInt a) :* NA_I (El as) :* Nil)
+  sfrom' (SS SZ) (El (Rose a as)) = Rep $ Here (NA_K _ex8_e :* NA_I (El as) :* Nil)
   sfrom' SZ (El [])              = Rep $ Here Nil
-  sfrom' SZ (El (x:xs))          = Rep $ There (Here (NA_I (El x) :* NA_I (El xs) :* Nil))
+  sfrom' SZ (El (x:xs))          = Rep $ There (Here (NA_I _ex8_c :* NA_I _ex8_d :* Nil))
 
-  sto' SZ (Rep (Here Nil))
-    = El []
-  sto' SZ (Rep (There (Here (NA_I (El x) :* NA_I (El xs) :* Nil))))
-    = El (x : xs)
-  sto' (SS SZ) (Rep (Here (NA_K (SInt a) :* NA_I (El as) :* Nil)))
-    = El (Rose a as)
+  sto' = _ex8_a
 
 -- Or, say we actually want to have a particular selection
 -- of opaque types, we can do so in a few easy steps:
