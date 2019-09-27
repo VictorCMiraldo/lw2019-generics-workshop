@@ -39,27 +39,24 @@ instance GShapeEq orig U1 where
 
 instance (GShapeEq orig f , GShapeEq orig g)
     => GShapeEq orig (f :*: g) where
-  gshapeEq p (f1 :*: g1) (f2 :*: g2)
-    = gshapeEq p f1 f2 && gshapeEq p g1 g2
+  gshapeEq = _ex6_a
 
 instance (GShapeEq orig f , GShapeEq orig g)
     => GShapeEq orig (f :+: g) where
-  gshapeEq p (L1 f1) (L1 f2) = gshapeEq p f1 f2
-  gshapeEq p (R1 g1) (R1 g2) = gshapeEq p g1 g2
-  gshapeEq _ _       _       = False
+  gshapeEq = _ex6_b
 
 instance (GShapeEq orig f) => GShapeEq orig (M1 i s f) where
-  gshapeEq p (M1 x) (M1 y) = gshapeEq p x y
+  gshapeEq = _ex6_c
 
 -- Constants always have the same shape!
 instance {-# OVERLAPPABLE #-} GShapeEq orig (K1 R a) where
-  gshapeEq _ _ _ = True
+  gshapeEq = _ex6_d
 
 -- Unless it's the very datatype we are recursing over,
 -- then we need to do the recursion.
 instance {-# OVERLAPPING #-} (ShapeEq orig orig)
     => GShapeEq orig (K1 R orig) where
-  gshapeEq p (K1 x) (K1 y) = shapeEq p x y
+  gshapeEq = _ex6_e
 
 instance ShapeEq BookInfo BookInfo     where
 instance ShapeEq QualName QualName     where
