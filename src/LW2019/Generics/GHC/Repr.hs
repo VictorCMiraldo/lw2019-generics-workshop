@@ -36,11 +36,10 @@ instance Generic BookInfo where
 instance Generic QualName where
   type Rep QualName = K1 R String :+: (K1 R String :*: K1 R QualName)
 
-  to (L1 (K1 name))          = Base name
-  to (R1 (K1 q :*: K1 rest)) = Qual q rest
+  to (L1 (K1 name))          = _ex2_a
+  to (R1 (K1 q :*: K1 rest)) = _ex2_b
 
-  from (Base name)   = L1 (K1 name) 
-  from (Qual q rest) = R1 (K1 q :*: K1 rest) 
+  from = _ex2_c
 
 -- GHC can infer these boring instances for us, though:
 deriving instance Generic (Tree12 a)
@@ -57,6 +56,6 @@ deriving instance Generic (Tree12 a)
 -- Bear in mind that "Rec0" is just "K1 R":
 
 type Tree12Rep a 
-  =   U1
-  :+: (K1 R a :*: K1 R (Tree12 a))
-  :+: (K1 R a :*: K1 R (Tree12 a) :*: K1 R (Tree12 a))
+  = Ex2_D
+
+data Ex2_D
