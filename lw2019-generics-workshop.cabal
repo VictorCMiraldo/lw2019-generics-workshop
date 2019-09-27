@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: a3040951dab10bd676286519283345b3e86226e85abae6515af76cf34932cf5b
+-- hash: e74031dcceee38e084722998b1315c59896bcc1e351d3153a77fe01d143ad188
 
 name:           lw2019-generics-workshop
 version:        0.0.0
@@ -63,9 +63,11 @@ test-suite spec
   main-is: Spec.hs
   other-modules:
       LW2019.EqualitySpec
+      LW2019.GHC.ReprSpec
       LW2019.HeightSpec
       LW2019.PreludeSpec
       LW2019.ShapeEqualitySpec
+      LW2019.SOP.ReprSpec
       Paths_lw2019_generics_workshop
   hs-source-dirs:
       tests
