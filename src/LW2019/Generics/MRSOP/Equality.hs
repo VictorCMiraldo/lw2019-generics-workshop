@@ -29,13 +29,13 @@ geq x y = go (dfrom x) (dfrom y)
   where
     go :: (EqHO ki)
        => Fix ki codes ix -> Fix ki codes ix -> Bool
-    go (Fix x) (Fix y) = case zipRep x y of
+    go (Fix x) (Fix y) = case _ex9_e x y of
       Nothing -> False
       Just r  -> elimRep
-                   (uncurry' (==)) -- How to eliminate opaques
-                   (uncurry' go)   -- How to eliminate recursive parts
-                   and             -- How to combine the results
-                   r               -- What to elminate over.
+                   (uncurry' _ex9_a)  -- How to eliminate opaques
+                   (uncurry' _ex9_b)  -- How to eliminate recursive parts
+                   _ex9_c             -- How to combine the results
+                   _ex9_d             -- What to elminate over.
 
 -- We can then instanteate 'geq' for different
 -- families.
