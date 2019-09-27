@@ -27,14 +27,13 @@ shapeEq x y = go (from x) (from y)
   where
     go :: forall xss. (All (AnnotateRec a) xss, All SListI xss)
        => SOP I xss -> SOP I xss -> Bool
-    go (SOP (Z xs))  (SOP (Z ys))  = and . hcollapse
+    go (SOP (Z xs))  (SOP (Z ys))  = _ex7_a
                                    $ hliftA2 seq (annotate xs)
                                                  (annotate ys)
     go (SOP (S xss)) (SOP (S yss)) = go (SOP xss) (SOP yss)
     go _             _             = False
 
     seq :: Ann a b -> Ann a b -> K Bool b
-    seq (Rec x) (Rec y) = K (shapeEq x y)
-    seq _       _       = K True
+    seq = _ex7_b
 
 
