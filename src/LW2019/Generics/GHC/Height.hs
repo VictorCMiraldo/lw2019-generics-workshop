@@ -10,6 +10,7 @@
 module LW2019.Generics.GHC.Height where
 
 import LW2019.Types.Regular
+import LW2019.Types.Values
 import LW2019.Generics.GHC.Repr
 
 import GHC.Generics
@@ -57,9 +58,13 @@ instance {-# OVERLAPPING #-} (Height orig orig)
     => GHeight orig (K1 R orig) where
   gheight p (K1 x) = 1 + height p x
 
-instance Height BookInfo BookInfo where
-instance Height QualName QualName where
+instance Height BookInfo   BookInfo   where
+instance Height QualName   QualName   where
+instance Height (Tree12 a) (Tree12 a) where
 
-go :: QualName -> Int
-go = height (Proxy :: Proxy QualName)
+heightQualName :: QualName -> Int
+heightQualName = height (Proxy :: Proxy QualName)
+
+heightTree12 :: forall a . Tree12 a -> Int
+heightTree12 = height (Proxy :: Proxy (Tree12 a))
 

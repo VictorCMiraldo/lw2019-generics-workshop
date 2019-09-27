@@ -51,5 +51,5 @@ deep_to = to . unBinF . fmap deep_to . unFix
 -- Is it the case that to (from x) == x?
 --
 t1 , t2 :: Bin Int
-t1 = Bin 42 Leaf Leaf
-t2 = Bin 21 t1 Leaf
+t1 = Fork 42 Leaf Leaf
+t2 = Fork 21 t1 Leaf

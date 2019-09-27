@@ -10,6 +10,7 @@ module LW2019.Generics.GHC.Equality where
 
 -- The types we want to look at are:
 import LW2019.Types.Regular
+import LW2019.Types.Values
 import LW2019.Generics.GHC.Repr
 
 -- Our generic library of study here will be:
@@ -80,3 +81,10 @@ instance Eq' QualName where
 -- Note how type parameters are a non-issue as long
 -- as we require a comprassion instance for them.
 instance Eq' a => Eq' (Tree12 a) where
+
+-- In order to play around:
+
+test1 :: Bool
+test1 =
+  let x = valTree12 4 -- gets a tree at most 4 constructors deep
+   in eq x x

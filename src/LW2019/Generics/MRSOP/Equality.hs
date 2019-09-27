@@ -5,6 +5,7 @@ module LW2019.Generics.MRSOP.Equality where
 
 import LW2019.Types.Regular
 import LW2019.Types.MutuallyRecursive
+import LW2019.Types.Values
 import LW2019.Generics.MRSOP.Repr
 
 import Generics.MRSOP.Base hiding (geq)

@@ -8,6 +8,7 @@ category: Other
 
 dependencies:
   - base >= 4.9 && < 5
+  - sop-core
   - generics-sop  
   - generics-mrsop >= 2.2.0
   - cryptonite

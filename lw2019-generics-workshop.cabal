@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 1f13abf9b9c97d2e0b7271a5c281fc16d67fcf30f32a54c0bc690c9481cd2fb9
+-- hash: 6e9014cea330cb4cbd3297f502964cb015075ea035eafecc0b31b930086af3aa
 
 name:           lw2019-generics-workshop
 version:        0.0.0
@@ -55,6 +55,7 @@ library
     , generics-sop
     , hspec
     , memory
+    , sop-core
   default-language: Haskell2010
 
 test-suite spec
@@ -77,4 +78,5 @@ test-suite spec
     , hspec
     , lw2019-generics-workshop
     , memory
+    , sop-core
   default-language: Haskell2010

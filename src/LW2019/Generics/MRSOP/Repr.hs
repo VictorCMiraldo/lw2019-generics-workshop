@@ -41,15 +41,15 @@ deriveFamily [t| Tree12 Int |]
 -- Let's now define a more interesting one
 
 -- |All codes packed in a type-level list
-type CodesRose = '[  '[ '[]                  , '[ 'I ('S 'Z) , 'I 'Z] ]
-                  ,  '[ '[ 'K 'KInt , 'I 'Z] ]
-                  ]
+type CodesRoseInt = '[  '[ '[]                  , '[ 'I ('S 'Z) , 'I 'Z] ]
+                     ,  '[ '[ 'K 'KInt , 'I 'Z] ]
+                     ]
 
 -- |The types corresponding the the codes in 'CodesRose'
 -- appear in the same order.
-type FamRose   = '[ [Rose Int] , Rose Int] 
+type FamRoseInt  = '[ [Rose Int] , Rose Int] 
 
-instance Family Singl FamRose CodesRose where
+instance Family Singl FamRoseInt CodesRoseInt where
   sfrom' (SS SZ) (El (Rose a as)) = Rep $ Here (NA_K (SInt a) :* NA_I (El as) :* Nil)
   sfrom' SZ (El [])              = Rep $ Here Nil
   sfrom' SZ (El (x:xs))          = Rep $ There (Here (NA_I (El x) :* NA_I (El xs) :* Nil))

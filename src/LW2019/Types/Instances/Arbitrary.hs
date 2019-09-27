@@ -45,4 +45,4 @@ instance Arbitrary (LambdaDecl Int) where
   arbitrary = unEl <$> garbitrary @MyOpqI @FamLambdaLetInt @_ @(S (S Z))
 
 instance Arbitrary (Rose Int) where
-  arbitrary = unEl <$> garbitrary @Singl @FamRoseInt @_ @Z
+  arbitrary = unEl <$> garbitrary @Singl @FamRoseInt @_ @(S Z)

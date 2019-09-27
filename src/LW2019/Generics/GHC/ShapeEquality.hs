@@ -11,6 +11,7 @@
 module LW2019.Generics.GHC.ShapeEquality where
 
 import LW2019.Types.Regular
+import LW2019.Types.Values
 import LW2019.Generics.GHC.Repr
 
 import GHC.Generics
