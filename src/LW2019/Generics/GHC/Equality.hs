@@ -40,19 +40,17 @@ class GEq' (f :: * -> *) where
 
 -- Base Case: Unit type
 instance GEq' U1 where
-  geq U1 U1 = True
+  geq U1 U1 = _ex3_a
 
 -- Inductive case: Assuming f and g have equality;
 -- how do we compare values of type (f :*: g) for equality?
 instance (GEq' f , GEq' g) => GEq' (f :*: g) where
-  geq (f1 :*: g1) (f2 :*: g2) = geq f1 f2 && geq g1 g2
+  geq (f1 :*: g1) (f2 :*: g2) = _ex3_b
 
 -- Inductive case: Assuming f and g have equality;
 -- how do we compare values of type (f :+: g) for equality?
 instance (GEq' f , GEq' g) => GEq' (f :+: g) where
-  geq (L1 f1) (L1 f2) = geq f1 f2
-  geq (R1 g1) (R1 g2) = geq g1 g2
-  geq _       _       = False
+  geq = _ex3_c
 
 -- Meta Information is simply ignored
 instance (GEq' f) => GEq' (M1 i s f) where
@@ -60,7 +58,7 @@ instance (GEq' f) => GEq' (M1 i s f) where
 
 -- Tying the knot: Note how we ask an Eq' constraint for the type a
 instance (Eq' a) => GEq' (K1 R a) where
-  geq (K1 x) (K1 y) = eq x y
+  geq (K1 x) (K1 y) = _ex3_d
 
 
 -- Now we declare some instances for our base types
