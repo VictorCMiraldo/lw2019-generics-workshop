@@ -19,12 +19,12 @@ data Bin a = Leaf | Fork a (Bin a) (Bin a)
 type Bin' a = Either () (a , Bin a , Bin a)
 
 to :: Bin' a -> Bin a
-to (Left ())         = Leaf
-to (Right (a, l, r)) = Fork a l r
+to (Left ())         = _ex1_a
+to (Right (a, l, r)) = _ex1_b
 
 from :: Bin a -> Bin' a
-from Leaf         = Left ()
-from (Fork a l r) = Right (a , l , r)
+from Leaf         = _ex1_c
+from (Fork a l r) = _ex1_d
 
 -- * Recursion
 
@@ -43,7 +43,7 @@ deep_from :: Bin a -> Fix (BinF a)
 deep_from = Fix . fmap deep_from . BinF . from
 
 deep_to :: Fix (BinF a) -> Bin a
-deep_to = to . unBinF . fmap deep_to . unFix
+deep_to = _ex1_e
 
 
 -- Play around; load the module and call the conversion functions.
