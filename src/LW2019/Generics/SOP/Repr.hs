@@ -21,16 +21,15 @@ instance Generic BookInfo where
   from (BookInfo name isbn price)
     = (SOP (Z (I name :* I isbn :* I price :* Nil)))
 
+data Ex4_A
 
 instance Generic QualName where
-  type Code QualName = '[ '[String]
-                        , '[String , QualName] ]
+  type Code QualName = Ex4_A
 
-  to (SOP    (Z (I b :* Nil)))         = Base b
-  to (SOP (S (Z (I b :* I r :* Nil)))) = Qual b r
+  to (SOP    (Z (I b :* Nil)))         = _ex4_b
+  to (SOP (S (Z (I b :* I r :* Nil)))) = _ex4_c
 
-  from (Base b)   = SOP    (Z (I b :* Nil))
-  from (Qual b r) = SOP (S (Z (I b :* I r :* Nil)))
+  from _ex4_d
 
 -- We can also use template haskell to derive our instances.
 -- What's the generated code? Again, we can check by
