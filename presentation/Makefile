@@ -1,4 +1,4 @@
-LATEXENGINE=--pdf-engine=xelatex
+LATEXENGINE=--latex-engine=xelatex
 
 default:slides.pdf
 
