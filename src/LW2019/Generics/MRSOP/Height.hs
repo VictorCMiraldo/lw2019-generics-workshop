@@ -31,11 +31,10 @@ gheight0 x = go (dfrom x)
   where
     go :: Fix ki codes ix -> Int
     go x = case sop (unFix x) of
-               Tag _ p -> maximum (0:elimNP recHeight p)
+               Tag _ p -> maximum (0: _ex11_a p)
 
     recHeight :: NA ki (Fix ki codes) at -> Int
-    recHeight (NA_K _) = 0
-    recHeight (NA_I x) = 1 + go x
+    recHeight = _ex11_b
 
 -- Well, like most recursive functions, computing the
 -- height of a tree is a catamorphism (aka fold).
@@ -44,8 +43,8 @@ gheight0 x = go (dfrom x)
 -- of a type where the height of the recursive parts have already been
 -- computed, assemblesthis into a new height.
 heightAlg :: Rep ki (Const Int) sum -> Const Int iy
-heightAlg = elimRep (const (Const 0))
-                    (Const . (1+) . getConst)
+heightAlg = elimRep _ex11_c
+                    _ex11_d
                     auxMax
   where
     auxMax :: [Const Int x] -> Const Int x
