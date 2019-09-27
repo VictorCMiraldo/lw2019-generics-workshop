@@ -13,9 +13,4 @@ shapeEq :: (Family ki fam codes)
 shapeEq x y = go (dfrom x) (dfrom y)
   where
     go :: Fix ki codes ix -> Fix ki codes ix -> Bool
-    go (Fix x) (Fix y) = case zipRep x y of
-      Nothing -> False
-      Just r  -> elimRep (const True)
-                         (uncurry' go)
-                         and
-                         r
+    go (Fix x) (Fix y) = _ex10
