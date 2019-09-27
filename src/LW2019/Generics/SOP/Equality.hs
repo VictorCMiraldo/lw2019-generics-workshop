@@ -20,18 +20,18 @@ import Generics.SOP
 
 geq :: (Generic a , All2 Eq (Code a))
     => a -> a -> Bool
-geq x y = go (from x) (from y)
+geq x y = go _ex5_d _ex5_e
   where
     go :: (All2 Eq xss) => SOP I xss -> SOP I xss -> Bool
-    go (SOP (Z xs))  (SOP (Z ys))  = and . hcollapse $ hczipWith p eq xs ys
-    go (SOP (S xss)) (SOP (S yss)) = go (SOP xss) (SOP yss)
+    go (SOP (Z xs))  (SOP (Z ys))  = _ex5_a . hcollapse $ hczipWith p eq xs ys
+    go (SOP (S xss)) (SOP (S yss)) = _ex5_b
     go _             _             = False
 
     p :: Proxy Eq
     p = Proxy
 
     eq :: forall (a :: *). Eq a => I a -> I a -> K Bool a
-    eq (I a) (I b) = K (a == b)
+    eq (I a) (I b) = K _ex5_c
 
 -- Now, we need to instruct GHC to use the generic equality
 -- whenever it is prompted with resolving an Eq constraint
