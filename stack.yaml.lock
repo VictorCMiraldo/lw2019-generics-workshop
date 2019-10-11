@@ -5,12 +5,19 @@
 
 packages:
 - completed:
-    hackage: generics-mrsop-2.2.0@sha256:5ea5325b02068b5668ab10badd34ae32e4bbeaaf72d87bfe25d581b72ee4837f,1790
+    cabal-file:
+      size: 1790
+      sha256: ef8e9216397ef881dd276d3ca5486371d6e1a60fb54b35fddf0f29f045982b6f
+    name: generics-mrsop
+    version: 2.3.0
+    git: git@github.com:VictorCMiraldo/generics-mrsop.git
     pantry-tree:
-      size: 1402
-      sha256: 52965216df7c138b1e463a16eff4971f2a4bbdd21c351f852fe9953a1860d274
+      size: 2094
+      sha256: 52a56127463ebaf9a0c2ab0fc8c1989e095dd11003e3e0d13641883001e9e46f
+    commit: 293bbd43b07f6562ca72725218bb1bd8d7406767
   original:
-    hackage: generics-mrsop-2.2.0
+    git: git@github.com:VictorCMiraldo/generics-mrsop.git
+    commit: 293bbd43b07f6562ca72725218bb1bd8d7406767
 snapshots:
 - completed:
     size: 523448

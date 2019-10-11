@@ -10,10 +10,7 @@ dependencies:
   - base >= 4.9 && < 5
   - sop-core
   - generics-sop  
-  - generics-mrsop >= 2.2.0
-  - cryptonite
-  - memory
-  - bytestring
+  - generics-mrsop >= 2.3.0
   - QuickCheck
   - hspec
 
