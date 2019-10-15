@@ -1,5 +1,4 @@
 resolver: lts-14.1
 
 extra-deps:
-  - generics-mrsop-2.2.0
-
+  - generics-mrsop-2.3.0
