@@ -32,7 +32,7 @@ geq x y = go (dfrom x) (dfrom y)
     go (Fix x) (Fix y) = case zipRep x y of
       Nothing -> False
       Just r  -> elimRep
-                   (uncurry' (==)) -- How to eliminate opaques
+                   (uncurry' eqHO) -- How to eliminate opaques
                    (uncurry' go)   -- How to eliminate recursive parts
                    and             -- How to combine the results
                    r               -- What to elminate over.
