@@ -71,8 +71,13 @@ data MyOpq = MyInt
 data MyOpqI :: MyOpq -> * where
   Opq :: Int -> MyOpqI MyInt
 
-deriving instance Show (MyOpqI x) 
-deriving instance Eq   (MyOpqI x) 
+instance ShowHO MyOpqI where
+  showsPrecHO d (Opq i) = showParen (d > app_prec) $
+    showString "Opq " . shows i
+   where app_prec = 10
+    
+instance EqHO MyOpqI where
+  eqHO (Opq i) (Opq j) = i == j
 
 -- 3) Call 'deriveDamilyWith' passing the interpretation
 -- of our selection of opaque types.
