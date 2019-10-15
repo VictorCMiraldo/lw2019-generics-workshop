@@ -29,7 +29,7 @@ instance Generic QualName where
   to (SOP    (Z (I b :* Nil)))         = _ex4_b
   to (SOP (S (Z (I b :* I r :* Nil)))) = _ex4_c
 
-  from _ex4_d
+  from = _ex4_d
 
 -- We can also use template haskell to derive our instances.
 -- What's the generated code? Again, we can check by
