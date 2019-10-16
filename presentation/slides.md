@@ -11,7 +11,6 @@ sansfont: Open Sans
 sansfontoptions: Scale=0.9
 monofont: Ubuntu Mono
 monofontoptions: Scale=0.8
-handout: true
 natbib: true
 biblio-title: Reading Material
 bibliography: 
@@ -54,17 +53,28 @@ another field to some datatype used indirectly.\pause
 
 ## Today
 
-* Three Generic Programming Libraries
-    - `GHC.Generics`, \pause the builtin generics powerhorse
-    - `Generics.SOP`, \pause with expressive combinator-based programming
-    - `Generics.MRSOP`, \pause combinator-based programming with mutual recursion
+Three Generic Programming Libraries \pause
 
+- `GHC.Generics`, the builtin generics powerhorse \pause
+
+- `Generics.SOP`, with expressive combinator-based programming \pause
+
+- `Generics.MRSOP`, combinator-based programming with mutual recursion
+
+
+## The Core Idea
+
+1. Represent datatypes with a uniform language \pause
+
+2. Interpret this language back into Haskell \pause
+
+3. Program over the uniform description
 
 
 ## Datatype Building Blocks
 
 Datatypes can be constructed with sums, products the unit type
-and the least fixpoint.
+and the least fixpoint. \pause
 
 We can unwrap \emph{one layer} of a recursive type:
 
@@ -78,6 +88,8 @@ to (Righ (x , xs)) = Cons x xs
 from :: List a -> Either () (a , List a)
 ```
 
+\pause
+
 Or encode recursion explicitely:
 
 ```haskell
@@ -87,7 +99,7 @@ newtype ListF a x = ListF (Either () (a , x))
 
 ## Datatype Building Blocks
 
-\exercise{LW2019/Prelude.hs}
+\exercise{1}{LW2019/Prelude.hs}
 
 \vfill
 
@@ -100,6 +112,7 @@ Meet the regular datatypes we will use today:
 
 `GHC.Generics` standard combinators instead of `Either`, `(,)`, ...
 
+\pause
 \vfill
 
 ```haskell
@@ -113,16 +126,22 @@ data V1        x
 
 \vfill
 
-Let's write `GHC.Generic` instances.
+Let's write `GHC.Generic` representation of datatypes!
 
 \pause
-\exercise{LW2019/Generics/GHC/Repr.hs}
+\exercise{2}{LW2019/Generics/GHC/Repr.hs}
 
 ## The Set of Regular Datatypes
 
+\pause
+
 * Lists, Binary Trees, etc... Constructed using sums, products, unit and least fixpoints.
 
+\pause
+
 * `GHC.Generics` \emph{does not} represent recursion explicitely.
+
+\pause
 
 * Standardized combinators allow us to write functions
   by \emph{induction on the structure of the generic representation}.
@@ -136,11 +155,15 @@ instance (Func f , Func g) => Func (f :*: g) where
 
 \pause
 
-\exercise{LW2019/Generics/GHC/Equality.hs}
+\exercise{3}{LW2019/Generics/GHC/Equality.hs}
 
 ## Sums-of-Products
 
+\pause
+
 * Writing functions by induction on the typeclass level is pretty boring.
+
+\pause
 
 * We know generic representation of a Haskell datatype will
   be in SOP form.
@@ -156,7 +179,7 @@ type instance Code (Bin a) = '[ '[ a ]
 type Rep (Bin a) = SOP I (Code (Bin a))
 ```
 
-\exercise{LW2019/Generics/SOP/Repr.hs}
+\exercise{4}{LW2019/Generics/SOP/Repr.hs}
 
 ## Sums-of-Products: Interpreting Codes
 
@@ -175,7 +198,7 @@ newtype SOP f code = SOP (NS (NP f) codes)
 ```
 
 Lets write the equality function for sums of products
-\exercise{LW2019/Generics/SOP/Equality.hs} 
+\exercise{5}{LW2019/Generics/SOP/Equality.hs} 
 
 ## Keep Note of These Types:
 
@@ -273,7 +296,7 @@ instance {-# OVERLAPPABLE #-} GShapeEq orig (K1 a) where ...
 
 \pause
 
-\exercise{LW2019/Generics/GHC/ShapeEquality.hs}
+\exercise{6}{LW2019/Generics/GHC/ShapeEquality.hs}
 
 \pause
 
@@ -307,7 +330,7 @@ class AnnotateRec orig (prod :: [ * ]) where
 
 Let's define shape equality for `SOP` and compare!
 
-\exercise{LW2019/Generics/SOP/ShapeEquality.hs}
+\exercise{7}{LW2019/Generics/SOP/ShapeEquality.hs}
 
 \pause
 
@@ -408,12 +431,12 @@ data El :: [k] -> Nat -> k where
 
 \pause
 
-\exercise{LW2019/Generic/MRSOP/Repr.hs}
+\exercise{8}{LW2019/Generic/MRSOP/Repr.hs}
 
 ## Equalities in `generics-mrsop`
 
-\exercise{LW2019/Generic/MRSOP/Equality.hs}
-\exercise{LW2019/Generic/MRSOP/ShapeEquality.hs}
+\exercise{9}{LW2019/Generic/MRSOP/Equality.hs}
+\exercise{10}{LW2019/Generic/MRSOP/ShapeEquality.hs}
 
 ```haskell
 zipRep :: Rep ki f c -> Rep kj g c 
@@ -436,7 +459,7 @@ cata :: (forall iy. Rep ki phi (Lkup iy codes) -> phi iy)
      -> phi ix
 ```
 
-\exercise{LW2019/Generic/MRSOP/Height.hs}
+\exercise{11}{LW2019/Generic/MRSOP/Height.hs}
 
 
 ## Annotated Fixpoints
