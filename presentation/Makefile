@@ -28,6 +28,7 @@ bib: tex references.bib
 	xelatex slides.tex
 	bibtex slides
 	xelatex slides.tex
+	xelatex slides.tex
 	rm -f *.blg *.bbl *.aux *.log *.nav *.out *.snm *.toc *.vrb
 
 
