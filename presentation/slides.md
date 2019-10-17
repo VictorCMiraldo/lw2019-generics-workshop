@@ -11,6 +11,7 @@ sansfont: Open Sans
 sansfontoptions: Scale=0.9
 monofont: Ubuntu Mono
 monofontoptions: Scale=0.8
+handout: true
 natbib: true
 biblio-title: Reading Material
 bibliography: 
@@ -97,7 +98,39 @@ newtype Fix f = Fix (f (Fix f))
 newtype ListF a x = ListF (Either () (a , x))
 ```
 
+## Explicit Recursion
+
+```haskell
+list123 :: Fix (ListF Int)
+list123 = Fix (ListF (Right (1 
+        , Fix (ListF (Right (2
+        , Fix (ListF (Right (3
+        , Fix (ListF (Left ())))
+        ))))))))
+```
+
+\pause
+
+Pretty ugly...
+
+\pause
+
+Pattern synonyms make it evident these are the lists we know and love!
+
+```haskell
+pattern Cons x xs  = Fix (ListF (Right x , xs))
+pattern Nil        = Fix (ListF (Left ()))
+
+list123 = Cons 1 (Cons 2 (Cons 3 Nil))
+```
+
 ## Datatype Building Blocks
+
+Let's practice with a different type:
+
+```haskell
+data Bin a = Leaf | Fork a (Bin a) (Bin a)
+```
 
 \exercise{1}{LW2019/Prelude.hs}
 
@@ -105,7 +138,7 @@ newtype ListF a x = ListF (Either () (a , x))
 
 \pause
 
-Meet the regular datatypes we will use today:
+Meet the first datatypes we will use today:
 \emacsonly{LW2019/Types/Regular.hs}
 
 ## Datatype Building Blocks: Standardizing
@@ -126,12 +159,21 @@ data V1        x
 
 \vfill
 
+\pause
+
+Uniform language:
+
+* Syntax: `data (f :+: g)`{.haskell}
+* Intepretation: `L1 | R1`
+
+\pause
+
 Let's write `GHC.Generic` representation of datatypes!
 
 \pause
 \exercise{2}{LW2019/Generics/GHC/Repr.hs}
 
-## The Set of Regular Datatypes
+## Programming over Regular Datatypes
 
 \pause
 
@@ -161,12 +203,11 @@ instance (Func f , Func g) => Func (f :*: g) where
 
 \pause
 
-* Writing functions by induction on the typeclass level is pretty boring.
+* Induction on the typeclass level is long
 
 \pause
 
-* We know generic representation of a Haskell datatype will
-  be in SOP form.
+* Haskell types already come in *normal form*! (SOP)
 
 \pause
 
@@ -179,11 +220,16 @@ type instance Code (Bin a) = '[ '[ a ]
 type Rep (Bin a) = SOP I (Code (Bin a))
 ```
 
+\pause
+
+Uniform syntax is in `Code`{.haskell}. Interpretation is separate, with `SOP`{.haskell}.
+
 \exercise{4}{LW2019/Generics/SOP/Repr.hs}
 
-## Sums-of-Products: Interpreting Codes
 
-Define GADT's that perform induction on \emph{codes}
+## Sums-of-Products: Interpreting Codes (01)
+
+Define GADT's that perform induction on \emph{codes}:
 
 ```haskell
 data NS (f :: k -> *) :: [k] where
@@ -193,6 +239,32 @@ data NS (f :: k -> *) :: [k] where
 data NP (f :: K -> *) :: [k] where
   Nil  :: NP f []
   Cons :: f x -> NP f xs -> NP f (x ': xs)
+```
+
+These are just n-ary sums and n-ary products.  \pause Think of it like:
+
+```haskell
+NS f [x1 , x2 , ... , xn] == Either (f x1) (Either (f x2) ... (f xn))
+
+NP f [x1 , x2 , ... , xm] == (f x1 , f x2 , ... , f xm)
+```
+
+
+
+## Sums-of-Products: Interpreting Codes (02)
+
+The whole recipe:
+
+```haskell
+data NS (f :: k -> *) :: [k] where
+  Z :: f x     -> NS f (x ': xs)
+  S :: NS f xs -> NS f (x ': xs)
+
+data NP (f :: K -> *) :: [k] where
+  Nil  :: NP f []
+  Cons :: f x -> NP f xs -> NP f (x ': xs)
+
+newtype I x = I x
 
 newtype SOP f code = SOP (NS (NP f) codes)
 ```
@@ -207,6 +279,8 @@ The `hcollapse` and `hczipWith` type signatures can hurt.
 Here, we use them with the types:
 
 ```haskell
+newtype K a x = K a
+
 hcollapse :: NP (K a) xs -> [a]
 
 hczipWith :: (forall x . Eq x => f x -> g x -> h x)
@@ -215,19 +289,29 @@ hczipWith :: (forall x . Eq x => f x -> g x -> h x)
 
 \pause
 
-Is it possible to write a `hccollapse` version for `GHC.Generics`?
+Is it possible to write a `hccollapse` version for `GHC.Generics`? Why?
+
+\pause
+
+No! `GHC.Generics` language encodes types in all shapes and forms.
+Imagine:
+
+```haskell
+type T = f :*: (g :*: (h :*: (i :+: j)))
+```
 
 \vfill
 
 ## So Far
 
-* Datatypes are built from standard combinators
+* Uniform Language to describe datatypes
 
-* We can program by induction on this language
+* Interpret that back into Haskell
+    - Implicitely, like `GHC.Generics`
+    - Explicitely, like `Generics.SOP`
 
-* Datatypes that come reified from Haskell are in
-a normal form: SOP
-    - Which enables for expressive combinators
+* Explicit interpretation has better programming support
+    - Combinator-based approach versus typeclass
 
 \pause
 
@@ -235,10 +319,16 @@ a normal form: SOP
 
 * Recursion!
 
-## Recursion Example
+\pause
+\alert{But why do we need it?}
 
-At what point do we start needing information about
-recursive parts of a datatype?
+\pause
+Sit tight...
+
+## Explicit Recursion Improvised
+
+When do we start needing information about
+recursive structure?
 
 ```haskell
 shapeEq [1,2,3] [5,6,7] == True
@@ -304,7 +394,7 @@ And yes... We have to use the `orig` trick every time we need to
 have information about which fields of a constructor are
 recursive occurences of our type.
 
-## Recursion Example: `SOP`
+## Explicit Recursion Rehearsed: `SOP`
 
 The `generics-sop` approach saves some work. We only need to do the
 `orig` work once:
@@ -326,7 +416,8 @@ class AnnotateRec orig (prod :: [ * ]) where
 
 \emacsonly{LW2019/Generics/SOP/AnnotateRec.hs}
 
-## Recursion Example: `SOP`
+
+## Explicit Recursion Rehearsed: `SOP`
 
 Let's define shape equality for `SOP` and compare!
 
@@ -342,17 +433,16 @@ Let's define shape equality for `SOP` and compare!
   
 \pause
 
-That's a consequence of the \emph{combinator based} approach, which
-is only possible because generic types come in \emph{normal form} (SOP, in this case)
+That's a consequence of the \emph{combinator based}, which
+is only possible because the interpretation of the generic language is *explicitly*
+for types in a normal form.
 
-## Explicit Recursion
+## Explicit Recursion Composed
 
 The `generics-mrsop` library supports Mutually Recursive Types,
 which are a superset of the regular types.
 
 \pause
-
-Example:
 
 * Regular: 
 ```haskell
@@ -365,6 +455,14 @@ data Maybe a = Nothing | Just a
 ```haskell
 data Zig = Zig | ZigZag Zag
 data Zag = Zag | ZagZig Zig
+```
+
+\pause
+
+Codes get lifted from to `  [ [ [Atom kon] ] ]  `{.haskell}, where
+
+```haskell
+data Atom kon = K kon | I Nat
 ```
 
 ## Codes for Mutually Recursive Types
@@ -391,15 +489,18 @@ type CodeZig = '[ '[ '[] , '[ I 1 ] ]
 \pause
 
 ```haskell
-type GZig = Rep NoOpq (Lkup FamZig) (Lkup CodesZig 0)
+type GZig = Rep Opaques (Lkup FamZig) (Lkup CodesZig 0)
+
+type family Lkup [x1 , ... xn] m = xm
 ```
 
 \pause
-```haskell
-newtype Rep ki f code = Rep (NS (NP (NA ki f)) code
-```
+
+The main difference from `SOP` is the `NA`:
 
 ```haskell
+newtype Rep ki f code = Rep (NS (NP (NA ki f)) code
+
 data NA ki f :: Atom -> * where
   NA_I :: f ix -> NA (I ix)
   NA_K :: ki k -> NA (K k)
@@ -492,8 +593,6 @@ newtype AnnFix ki codes (phi :: Nat -> *) ix = ...
 ```
 
 \pause
-
-\emacsonly{LW2019/Generics/MRSOP/MerkleTree.hs}
 
 ## Advanced Material
 
