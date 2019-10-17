@@ -256,14 +256,14 @@ $endif$
 
 \renewcommand{\theexercisectr}{exercise-\arabic{exercisectr}}
 
-\newcommand{\exercise}[1]{%
+\newcommand{\exercise}[2]{%
 \setbeamercolor{block body}{use=structure,fg=white,bg=almostBlackish}
-\begin{exampleblock}{Exercise \arabic{exercisectr}:}
+\begin{exampleblock}{Exercise #1:}
 \vspace{-.6em}
 \begin{alltt}
  \small
- \hspace{0.2em}  .../lw2019-generics-workshop \$$ git checkout -b \theexercisectr \\
- \hspace{0.2em}  .../lw2019-generics-workshop \$$ emacs #1
+ \hspace{0.2em}  .../lw2019-generics-workshop \$$ git checkout -b exercise-#1 \\
+ \hspace{0.2em}  .../lw2019-generics-workshop \$$ emacs #2
 \end{alltt}
 \vspace{-.8em}
 \end{exampleblock}
