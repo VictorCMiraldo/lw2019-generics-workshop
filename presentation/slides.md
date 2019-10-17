@@ -11,7 +11,6 @@ sansfont: Open Sans
 sansfontoptions: Scale=0.9
 monofont: Ubuntu Mono
 monofontoptions: Scale=0.8
-handout: true
 natbib: true
 biblio-title: Reading Material
 bibliography: 
